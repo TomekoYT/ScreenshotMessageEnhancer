@@ -12,6 +12,8 @@ val fabric_api_version = property("fabric_api_version")
 val yacl_version = property("yacl_version")
 val mod_menu_version = property("mod_menu_version")
 
+val java_objective_c_bridge_version = property("java_objective_c_bridge_version")
+
 plugins {
 	id("net.fabricmc.fabric-loom-remap")
 }
@@ -33,6 +35,8 @@ dependencies {
 
 	modImplementation("dev.isxander:yet-another-config-lib:$yacl_version")
 	modImplementation("com.terraformersmc:modmenu:$mod_menu_version")
+
+	implementation("ca.weblite:java-objc-bridge:${java_objective_c_bridge_version}")
 }
 
 tasks.processResources {

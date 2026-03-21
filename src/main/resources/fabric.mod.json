@@ -23,6 +23,9 @@
 			"tomeko.screenshotmessageenhancer.config.ModMenuIntegration"
 		]
 	},
+	"mixins": [
+		"screenshotmessageenhancer.mixins.json"
+	],
 	"depends": {
 		"java": ">=21",
 		"minecraft": "~${minecraft_version}",
