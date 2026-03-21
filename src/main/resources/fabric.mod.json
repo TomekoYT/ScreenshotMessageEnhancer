@@ -1,0 +1,45 @@
+{
+	"schemaVersion": 1,
+	"id": "${mod_id}",
+	"version": "${mod_version}",
+	"name": "${mod_name}",
+	"description": "${mod_description}",
+	"authors": [
+		"Tomeko"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/screenshotmessageenhancer",
+		"sources": "https://github.com/TomekoYT/ScreenshotMessageEnhancer",
+		"issues": "https://github.com/TomekoYT/ScreenshotMessageEnhancer/issues"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/screenshotmessageenhancer/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"tomeko.screenshotmessageenhancer.ScreenshotMessageEnhancer"
+		],
+		"modmenu": [
+			"tomeko.screenshotmessageenhancer.config.ModMenuIntegration"
+		]
+	},
+	"depends": {
+		"java": ">=21",
+		"minecraft": "~${minecraft_version}",
+		"fabricloader": ">=${fabric_loader_version}",
+		"fabric-api": ">=${fabric_api_version}",
+
+		"yet_another_config_lib_v3": ">=${yacl_version}",
+		"modmenu": ">=${mod_menu_version}"
+	},
+	"custom": {
+		"youtube": "https://www.youtube.com/@TomekoYT",
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.com/invite/FfzrbycDws",
+				"modmenu.modrinth": "https://modrinth.com/mod/screenshotmessageenhancer"
+			},
+			"update_checker": true
+		}
+	}
+}
