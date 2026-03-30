@@ -2,10 +2,7 @@ package tomeko.screenshotmessageenhancer.screenshots;
 
 import ca.weblite.objc.Client;
 import ca.weblite.objc.Proxy;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import com.mojang.blaze3d.platform.NativeImage;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,13 +10,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+
 public class ScreenshotManager {
     public static ArrayList<NativeImage> screenshotImages = new ArrayList<>();
     public static ArrayList<File> screenshotFiles = new ArrayList<>();
-    private static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final Minecraft client = Minecraft.getInstance();
 
     public static void copyScreenshot(int pos) {
         if (pos >= screenshotImages.toArray().length) return;
+
+        Component message = Component.literal("Screenshot copied to clipboard!").withStyle(style -> style.withColor(ChatFormatting.GREEN));
 
         if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("mac")) {
             Client macClient = Client.getInstance();
@@ -35,8 +38,13 @@ public class ScreenshotManager {
             pasteboard.send("clearContents");
             pasteboard.sendBoolean("writeObjects:", array);
 
-            if (client.player != null)
-                client.player.sendMessage(Text.literal("Screenshot copied to clipboard!").styled(style -> style.withColor(Formatting.GREEN)), false);
+            if (client.player != null) {
+                //? if >= 26.1 {
+                //client.player.sendOverlayMessage(message);
+                //?} else {
+                client.player.displayClientMessage(message, false);
+                //?}
+            }
             return;
         }
 
@@ -44,8 +52,14 @@ public class ScreenshotManager {
         ImageContent content = new ImageContent(image);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(content, null);
 
-        if (client.player != null)
-            client.player.sendMessage(Text.literal("Screenshot copied to clipboard!").styled(style -> style.withColor(Formatting.GREEN)), false);
+
+        if (client.player != null) {
+            //? if >= 26.1 {
+            //client.player.sendOverlayMessage(message);
+            //?} else {
+            client.player.displayClientMessage(message, false);
+            //?}
+        }
     }
 
     public static void deleteScreenshot(int pos) {
@@ -53,8 +67,14 @@ public class ScreenshotManager {
 
         screenshotFiles.get(pos).delete();
 
-        if (client.player != null)
-            client.player.sendMessage(Text.literal("Screenshot deleted!").styled(style -> style.withColor(Formatting.RED)), false);
+        Component message = Component.literal("Screenshot deleted!").withStyle(style -> style.withColor(ChatFormatting.RED));
+        if (client.player != null) {
+            //? if >= 26.1 {
+            //client.player.sendOverlayMessage(message);
+            //?} else {
+            client.player.displayClientMessage(message, false);
+            //?}
+        }
     }
 
     private static BufferedImage convert(NativeImage image) {
@@ -62,7 +82,7 @@ public class ScreenshotManager {
 
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
-                out.setRGB(x, y, image.getColorArgb(x, y));
+                out.setRGB(x, y, image.getPixel(x, y));
             }
         }
         return out;

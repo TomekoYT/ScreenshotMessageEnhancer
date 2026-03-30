@@ -1,29 +1,39 @@
 package tomeko.screenshotmessageenhancer.mixin;
 
-import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.util.ScreenshotRecorder;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
+import org.slf4j.Logger;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tomeko.screenshotmessageenhancer.config.ScreenshotMessageEnhancerConfig;
 import tomeko.screenshotmessageenhancer.screenshots.ScreenshotManager;
 import tomeko.screenshotmessageenhancer.utils.Constants;
-
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import java.io.File;
 import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+//? if >= 1.21.11 {
+/*import net.minecraft.util.Util;
+*///?} else {
+import net.minecraft.Util;
+//?}
+import net.minecraft.client.Screenshot;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
 
-@Mixin(ScreenshotRecorder.class)
+@Mixin(Screenshot.class)
 public class ScreenshotRecorderMixin {
-    @Inject(at = @At("HEAD"), method = "saveScreenshot(Ljava/io/File;Ljava/lang/String;Lnet/minecraft/client/gl/Framebuffer;ILjava/util/function/Consumer;)V", cancellable = true)
-    private static void saveScreenshot(File gameDirectory, String fileName, Framebuffer framebuffer, int downscaleFactor, Consumer<Text> messageReceiver, CallbackInfo ci) {
-        ScreenshotRecorder.takeScreenshot(framebuffer, (nativeImage) -> {
+    @Shadow
+    @Final
+    private static Logger LOGGER;
+
+    @Inject(at = @At("HEAD"), method = "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V", cancellable = true)
+    private static void saveScreenshot(File gameDirectory, String fileName, RenderTarget framebuffer, int downscaleFactor, Consumer<Component> messageReceiver, CallbackInfo ci) {
+        Screenshot.takeScreenshot(framebuffer, (nativeImage) -> {
             File screenshotsFolder = new File(gameDirectory, "screenshots");
             File screenshotFile;
             if (fileName == null) {
@@ -33,47 +43,48 @@ public class ScreenshotRecorderMixin {
             }
 
             try {
-                nativeImage.writeTo(screenshotFile);
+                nativeImage.writeToFile(screenshotFile);
                 ScreenshotManager.screenshotImages.add(nativeImage);
                 ScreenshotManager.screenshotFiles.add(screenshotFile);
-                MutableText message = Text.literal("Saved screenshot");
+                MutableComponent message = Component.literal("Saved screenshot");
 
                 if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddName) {
-                    message.append(Text.literal(" as "));
-                    message.append(Text.literal(screenshotFile.getName()).formatted(Formatting.UNDERLINE));
+                    message.append(Component.literal(" as "));
+                    message.append(Component.literal(screenshotFile.getName()).withStyle(ChatFormatting.UNDERLINE));
                 }
 
                 if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddCopy) {
                     message.append(" ");
-                    message.append(Text.literal("[COPY]").formatted(Formatting.BOLD, Formatting.BLUE).styled(style -> style
+                    message.append(Component.literal("[COPY]").withStyle(ChatFormatting.BOLD, ChatFormatting.BLUE).withStyle(style -> style
                             .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_COPY_COMMAND + " " + (ScreenshotManager.screenshotImages.toArray().length - 1)))
-                            .withHoverEvent(new HoverEvent.ShowText(Text.literal("Copy the screenshot")))));
+                            .withHoverEvent(new HoverEvent.ShowText(Component.literal("Copy the screenshot")))));
                 }
 
                 if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddOpen) {
                     message.append(" ");
-                    message.append(Text.literal("[OPEN]").formatted(Formatting.BOLD, Formatting.GREEN).styled(style -> style
+                    message.append(Component.literal("[OPEN]").withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN).withStyle(style -> style
                             .withClickEvent(new ClickEvent.OpenFile(screenshotFile.getAbsolutePath()))
-                            .withHoverEvent(new HoverEvent.ShowText(Text.literal("Open " + screenshotFile.getName())))));
+                            .withHoverEvent(new HoverEvent.ShowText(Component.literal("Open " + screenshotFile.getName())))));
                 }
 
                 if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddOpenFolder) {
                     message.append(" ");
-                    message.append(Text.literal("[OPEN FOLDER]").formatted(Formatting.BOLD, Formatting.GOLD).styled(style -> style
+                    message.append(Component.literal("[OPEN FOLDER]").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD).withStyle(style -> style
                             .withClickEvent(new ClickEvent.OpenFile(screenshotsFolder.getAbsolutePath()))
-                            .withHoverEvent(new HoverEvent.ShowText(Text.literal(screenshotsFolder.getPath())))));
+                            .withHoverEvent(new HoverEvent.ShowText(Component.literal(screenshotsFolder.getPath())))));
                 }
 
                 if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddDelete) {
                     message.append(" ");
-                    message.append(Text.literal("[DELETE]").formatted(Formatting.BOLD, Formatting.RED).styled(style -> style
+                    message.append(Component.literal("[DELETE]").withStyle(ChatFormatting.BOLD, ChatFormatting.RED).withStyle(style -> style
                             .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_DELETE_COMMAND + " " + (ScreenshotManager.screenshotFiles.toArray().length - 1)))
-                            .withHoverEvent(new HoverEvent.ShowText(Text.literal("Delete the screenshot")))));
+                            .withHoverEvent(new HoverEvent.ShowText(Component.literal("Delete the screenshot")))));
                 }
 
                 messageReceiver.accept(message);
             } catch (Exception ignored) {
             } finally {
+                LOGGER.info("Nie dziala :(");
                 ci.cancel();
             }
         });
@@ -81,7 +92,7 @@ public class ScreenshotRecorderMixin {
     }
 
     private static File getScreenshotFilename(File directory) {
-        String time = Util.getFormattedCurrentTime();
+        String time = Util.getFilenameFormattedDateTime();
         int i = 1;
 
         while (true) {

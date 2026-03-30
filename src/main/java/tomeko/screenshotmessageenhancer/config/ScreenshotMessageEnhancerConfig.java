@@ -6,8 +6,8 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import dev.isxander.yacl3.platform.YACLPlatform;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import tomeko.screenshotmessageenhancer.utils.Constants;
 
 public class ScreenshotMessageEnhancerConfig {
@@ -32,38 +32,38 @@ public class ScreenshotMessageEnhancerConfig {
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
-                .title(Text.literal(Constants.MOD_NAME))
+                .title(Component.literal(Constants.MOD_NAME))
 
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.literal("Screenshot Message Enhancer Config"))
+                        .name(Component.literal("Screenshot Message Enhancer Config"))
 
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Enabled"))
+                                .name(Component.literal("Enabled"))
                                 .binding(defaults.modifyScreenshotMessageEnabled, () -> config.modifyScreenshotMessageEnabled, newVal -> config.modifyScreenshotMessageEnabled = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Add Screenshot Name"))
+                                .name(Component.literal("Add Screenshot Name"))
                                 .binding(defaults.modifyScreenshotMessageAddName, () -> config.modifyScreenshotMessageAddName, newVal -> config.modifyScreenshotMessageAddName = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Add [COPY] Button"))
+                                .name(Component.literal("Add [COPY] Button"))
                                 .binding(defaults.modifyScreenshotMessageAddCopy, () -> config.modifyScreenshotMessageAddCopy, newVal -> config.modifyScreenshotMessageAddCopy = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Add [OPEN] Button"))
+                                .name(Component.literal("Add [OPEN] Button"))
                                 .binding(defaults.modifyScreenshotMessageAddOpen, () -> config.modifyScreenshotMessageAddOpen, newVal -> config.modifyScreenshotMessageAddOpen = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Add [OPEN FOLDER] Button"))
+                                .name(Component.literal("Add [OPEN FOLDER] Button"))
                                 .binding(defaults.modifyScreenshotMessageAddOpenFolder, () -> config.modifyScreenshotMessageAddOpenFolder, newVal -> config.modifyScreenshotMessageAddOpenFolder = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Add [DELETE] Button"))
+                                .name(Component.literal("Add [DELETE] Button"))
                                 .binding(defaults.modifyScreenshotMessageAddDelete, () -> config.modifyScreenshotMessageAddDelete, newVal -> config.modifyScreenshotMessageAddDelete = newVal)
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
