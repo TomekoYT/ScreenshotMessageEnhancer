@@ -11,12 +11,14 @@ import tomeko.screenshotmessageenhancer.config.ScreenshotMessageEnhancerConfig;
 import tomeko.screenshotmessageenhancer.screenshots.ScreenshotManager;
 import tomeko.screenshotmessageenhancer.utils.Constants;
 import com.mojang.blaze3d.pipeline.RenderTarget;
+
 import java.io.File;
 import java.util.function.Consumer;
+
 import net.minecraft.ChatFormatting;
 //? if >= 1.21.11 {
 /*import net.minecraft.util.Util;
-*///?} else {
+ *///?} else {
 import net.minecraft.Util;
 //?}
 import net.minecraft.client.Screenshot;
@@ -33,6 +35,8 @@ public class ScreenshotRecorderMixin {
 
     @Inject(at = @At("HEAD"), method = "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V", cancellable = true)
     private static void saveScreenshot(File gameDirectory, String fileName, RenderTarget framebuffer, int downscaleFactor, Consumer<Component> messageReceiver, CallbackInfo ci) {
+        if (!ScreenshotMessageEnhancerConfig.modifyScreenshotMessageEnabled) return;
+
         Screenshot.takeScreenshot(framebuffer, (nativeImage) -> {
             File screenshotsFolder = new File(gameDirectory, "screenshots");
             File screenshotFile;
