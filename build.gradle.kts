@@ -19,7 +19,7 @@ plugins {
 }
 
 base {
-	archivesName.set("$mod_archives_name-$mod_version+$minecraft_version-fabric")
+	archivesName.set("$mod_archives_name-$mod_version-$minecraft_version+_fabric")
 }
 
 repositories {
