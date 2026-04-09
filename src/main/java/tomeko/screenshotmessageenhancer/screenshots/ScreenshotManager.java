@@ -22,7 +22,6 @@ public class ScreenshotManager {
     public static ArrayList<File> screenshotFiles = new ArrayList<>();
     private static final Minecraft client = Minecraft.getInstance();
 
-
     public static void copyScreenshot(int pos) {
         if (pos >= screenshotImages.toArray().length) return;
 
