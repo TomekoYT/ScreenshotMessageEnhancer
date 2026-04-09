@@ -1,9 +1,6 @@
 package tomeko.screenshotmessageenhancer.mixin;
 
-import org.slf4j.Logger;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -29,10 +26,6 @@ import net.minecraft.network.chat.MutableComponent;
 
 @Mixin(Screenshot.class)
 public class ScreenshotRecorderMixin {
-    @Shadow
-    @Final
-    private static Logger LOGGER;
-
     @Inject(at = @At("HEAD"), method = "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V", cancellable = true)
     private static void saveScreenshot(File gameDirectory, String fileName, RenderTarget framebuffer, int downscaleFactor, Consumer<Component> messageReceiver, CallbackInfo ci) {
         if (!ScreenshotMessageEnhancerConfig.modifyScreenshotMessageEnabled) return;
@@ -88,7 +81,6 @@ public class ScreenshotRecorderMixin {
                 messageReceiver.accept(message);
             } catch (Exception ignored) {
             } finally {
-                LOGGER.info("Nie dziala :(");
                 ci.cancel();
             }
         });

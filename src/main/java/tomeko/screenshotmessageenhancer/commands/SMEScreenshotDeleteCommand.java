@@ -6,11 +6,11 @@ import tomeko.screenshotmessageenhancer.screenshots.ScreenshotManager;
 import tomeko.screenshotmessageenhancer.utils.Constants;
 
 //? if >= 26.1 {
-/*
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
+
+/*import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
- */
-//?} else {
+ 
+*///?} else {
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 //?}

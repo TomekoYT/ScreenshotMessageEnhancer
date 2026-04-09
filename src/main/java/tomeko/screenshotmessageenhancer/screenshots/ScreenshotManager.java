@@ -40,8 +40,8 @@ public class ScreenshotManager {
 
             if (client.player != null) {
                 //? if >= 26.1 {
-                //client.player.sendOverlayMessage(message);
-                //?} else {
+                /*client.gui.getChat().addClientSystemMessage(message);
+                *///?} else {
                 client.player.displayClientMessage(message, false);
                 //?}
             }
@@ -55,8 +55,8 @@ public class ScreenshotManager {
 
         if (client.player != null) {
             //? if >= 26.1 {
-            //client.player.sendOverlayMessage(message);
-            //?} else {
+            /*client.gui.getChat().addClientSystemMessage(message);
+            *///?} else {
             client.player.displayClientMessage(message, false);
             //?}
         }
@@ -70,8 +70,8 @@ public class ScreenshotManager {
         Component message = Component.literal("Screenshot deleted!").withStyle(style -> style.withColor(ChatFormatting.RED));
         if (client.player != null) {
             //? if >= 26.1 {
-            //client.player.sendOverlayMessage(message);
-            //?} else {
+            /*client.gui.getChat().addClientSystemMessage(message);
+            *///?} else {
             client.player.displayClientMessage(message, false);
             //?}
         }
