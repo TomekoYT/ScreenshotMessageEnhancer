@@ -15,7 +15,7 @@ val mod_menu_version: String by project
 val java_objective_c_bridge_version: String by project
 
 plugins {
-	id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT"
+	id("net.fabricmc.fabric-loom-remap") version "1.16-SNAPSHOT"
 }
 
 base {
