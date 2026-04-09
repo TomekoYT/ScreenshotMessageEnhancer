@@ -11,7 +11,7 @@
 </a>
 
 # Screenshot Message Enhancer
-Enhance screenshot messages with various buttons
+Enhance screenshot messages with COPY, OPEN, OPEN FOLDER and DELETE buttons
 
 ## Features
 
