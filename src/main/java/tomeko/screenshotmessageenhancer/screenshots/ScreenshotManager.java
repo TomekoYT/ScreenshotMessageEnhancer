@@ -15,7 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
-import static tomeko.screenshotmessageenhancer.utils.ScreenshotMessageUtils.threadExecutor;
+import static tomeko.screenshotmessageenhancer.utils.ScreenshotMessageEnhancerUtils.threadExecutor;
 
 public class ScreenshotManager {
     public static ArrayList<NativeImage> screenshotImages = new ArrayList<>();

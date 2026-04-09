@@ -25,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 
-import static tomeko.screenshotmessageenhancer.utils.ScreenshotMessageUtils.threadExecutor;
+import static tomeko.screenshotmessageenhancer.utils.ScreenshotMessageEnhancerUtils.threadExecutor;
 
 @Mixin(Screenshot.class)
 public class ScreenshotRecorderMixin {
