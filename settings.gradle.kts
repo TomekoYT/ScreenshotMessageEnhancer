@@ -8,6 +8,9 @@ pluginManagement {
         maven("https://maven.architectury.dev")
         maven("https://maven.kikugie.dev/snapshots")
         maven("https://maven.kikugie.dev/releases")
+
+        maven("https://maven.deftu.dev/releases")
+        maven("https://maven.deftu.dev/snapshots")
     }
 }
 
