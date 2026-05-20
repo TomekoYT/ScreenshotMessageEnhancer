@@ -47,7 +47,7 @@ public class ScreenshotManager {
                 //? if >= 26.1 {
                 /*client.gui.getChat().addClientSystemMessage(message);
                  *///?} else {
-                client.player.displayClientMessage(message, false);
+                client.gui.getChat().addMessage(message);
                 //?}
             }
             return;
@@ -63,7 +63,7 @@ public class ScreenshotManager {
             //? if >= 26.1 {
             /*client.gui.getChat().addClientSystemMessage(message);
              *///?} else {
-            client.player.displayClientMessage(message, false);
+            client.gui.getChat().addMessage(message);
             //?}
         }
     }
@@ -88,7 +88,7 @@ public class ScreenshotManager {
             //? if >= 26.1 {
             /*client.gui.getChat().addClientSystemMessage(message);
              *///?} else {
-            client.player.displayClientMessage(message, false);
+            client.gui.getChat().addMessage(message);
             //?}
         }
     }
