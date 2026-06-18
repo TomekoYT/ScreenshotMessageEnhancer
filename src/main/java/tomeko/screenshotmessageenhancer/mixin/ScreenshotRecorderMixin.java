@@ -10,91 +10,101 @@ import tomeko.screenshotmessageenhancer.utils.Constants;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 
 import java.io.File;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import net.minecraft.ChatFormatting;
-//? if >= 1.21.11 {
-/*import net.minecraft.util.Util;
- *///?} else {
-import net.minecraft.Util;
-//?}
+import net.minecraft.util.Util;
 import net.minecraft.client.Screenshot;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 
-import static tomeko.screenshotmessageenhancer.utils.ScreenshotMessageEnhancerUtils.threadExecutor;
-
 @Mixin(Screenshot.class)
 public class ScreenshotRecorderMixin {
     @Inject(at = @At("HEAD"), method = "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V", cancellable = true)
-    private static void saveScreenshot(File gameDirectory, String fileName, RenderTarget framebuffer, int downscaleFactor, Consumer<Component> messageReceiver, CallbackInfo ci) {
+    private static void saveScreenshot(File workDir, String forceName, RenderTarget target, int downscaleFactor, Consumer<Component> callback, CallbackInfo ci) {
         if (!ScreenshotMessageEnhancerConfig.modifyScreenshotMessageEnabled) return;
 
-        Screenshot.takeScreenshot(framebuffer, (nativeImage) -> {
-            File screenshotsFolder = new File(gameDirectory, "screenshots");
+        ci.cancel();
+
+        Screenshot.takeScreenshot(target, (nativeImage) -> {
+            File screenshotsFolder = new File(workDir, "screenshots");
+
+            if (!screenshotsFolder.exists()) {
+                screenshotsFolder.mkdirs();
+            }
+
             File screenshotFile;
-            if (fileName == null) {
+            if (forceName == null) {
                 screenshotFile = getScreenshotFilename(screenshotsFolder);
             } else {
-                screenshotFile = new File(screenshotsFolder, fileName);
+                screenshotFile = new File(screenshotsFolder, forceName);
             }
 
-            AtomicBoolean shouldReturn = new AtomicBoolean(false);
-            threadExecutor.submit(() -> {
+            File accessibleScreenshotFile;
+            File accessibleScreenshotsFolder;
+            try {
+                accessibleScreenshotFile = screenshotFile.getCanonicalFile();
+                accessibleScreenshotsFolder = screenshotsFolder.getCanonicalFile();
+            } catch (Exception e) {
+                accessibleScreenshotFile = screenshotFile.getAbsoluteFile();
+                accessibleScreenshotsFolder = screenshotsFolder.getAbsoluteFile();
+            }
+
+            File finalFile = accessibleScreenshotFile;
+            File finalFolder = accessibleScreenshotsFolder;
+
+            Util.ioPool().execute(() -> {
                 try {
-                    nativeImage.writeToFile(screenshotFile);
-                } catch (Exception ignored) {
+                    nativeImage.writeToFile(finalFile);
+
+                    ScreenshotManager.screenshotFiles.add(finalFile);
+                    int currentIdx = ScreenshotManager.screenshotFiles.size() - 1;
+
+                    MutableComponent message = Component.literal("Saved screenshot");
+
+                    if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddName) {
+                        message.append(Component.literal(" as "));
+                        message.append(Component.literal(finalFile.getName()).withStyle(ChatFormatting.UNDERLINE));
+                    }
+
+                    if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddCopy) {
+                        message.append(" ");
+                        message.append(Component.literal("[COPY]").withStyle(ChatFormatting.BOLD, ChatFormatting.BLUE).withStyle(style -> style
+                                .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_COPY_COMMAND + " " + currentIdx))
+                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Copy the screenshot")))));
+                    }
+
+                    if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddOpen) {
+                        message.append(" ");
+                        message.append(Component.literal("[OPEN]").withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN).withStyle(style -> style
+                                .withClickEvent(new ClickEvent.OpenFile(finalFile.getAbsolutePath()))
+                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Open " + finalFile.getName())))));
+                    }
+
+                    if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddOpenFolder) {
+                        message.append(" ");
+                        message.append(Component.literal("[OPEN FOLDER]").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD).withStyle(style -> style
+                                .withClickEvent(new ClickEvent.OpenFile(finalFolder.getAbsolutePath()))
+                                .withHoverEvent(new HoverEvent.ShowText(Component.literal(finalFolder.getPath())))));
+                    }
+
+                    if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddDelete) {
+                        message.append(" ");
+                        message.append(Component.literal("[DELETE]").withStyle(ChatFormatting.BOLD, ChatFormatting.RED).withStyle(style -> style
+                                .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_DELETE_COMMAND + " " + currentIdx))
+                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Delete the screenshot")))));
+                    }
+
+                    callback.accept(message);
+                } catch (Exception e) {
+                    callback.accept(Component.literal("Failed to save screenshot: " + e.getMessage()).withStyle(ChatFormatting.RED));
                 } finally {
-                    ci.cancel();
-                    shouldReturn.set(true);
+                    nativeImage.close();
                 }
             });
-
-            if (shouldReturn.get()) return;
-
-            ScreenshotManager.screenshotImages.add(nativeImage);
-            ScreenshotManager.screenshotFiles.add(screenshotFile);
-            MutableComponent message = Component.literal("Saved screenshot");
-
-            if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddName) {
-                message.append(Component.literal(" as "));
-                message.append(Component.literal(screenshotFile.getName()).withStyle(ChatFormatting.UNDERLINE));
-            }
-
-            if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddCopy) {
-                message.append(" ");
-                message.append(Component.literal("[COPY]").withStyle(ChatFormatting.BOLD, ChatFormatting.BLUE).withStyle(style -> style
-                        .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_COPY_COMMAND + " " + (ScreenshotManager.screenshotImages.toArray().length - 1)))
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("Copy the screenshot")))));
-            }
-
-            if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddOpen) {
-                message.append(" ");
-                message.append(Component.literal("[OPEN]").withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN).withStyle(style -> style
-                        .withClickEvent(new ClickEvent.OpenFile(screenshotFile.getAbsolutePath()))
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("Open " + screenshotFile.getName())))));
-            }
-
-            if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddOpenFolder) {
-                message.append(" ");
-                message.append(Component.literal("[OPEN FOLDER]").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD).withStyle(style -> style
-                        .withClickEvent(new ClickEvent.OpenFile(screenshotsFolder.getAbsolutePath()))
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal(screenshotsFolder.getPath())))));
-            }
-
-            if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddDelete) {
-                message.append(" ");
-                message.append(Component.literal("[DELETE]").withStyle(ChatFormatting.BOLD, ChatFormatting.RED).withStyle(style -> style
-                        .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_DELETE_COMMAND + " " + (ScreenshotManager.screenshotFiles.toArray().length - 1)))
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("Delete the screenshot")))));
-            }
-
-            messageReceiver.accept(message);
         });
-        ci.cancel();
     }
 
     private static File getScreenshotFilename(File directory) {

@@ -15,92 +15,91 @@ val mod_menu_version: String by project
 val java_objective_c_bridge_version: String by project
 
 plugins {
-	id("net.fabricmc.fabric-loom-remap") version "1.16-SNAPSHOT"
-	id("dev.deftu.gradle.bloom") version "0.2.0"
+    id("net.fabricmc.fabric-loom") version "1.16-SNAPSHOT"
+    id("dev.deftu.gradle.bloom") version "0.2.0"
 }
 
 base {
-	archivesName.set("$mod_archives_name-$mod_version-$minecraft_version+_fabric")
+    archivesName.set("$mod_archives_name-$mod_version-$minecraft_version+_fabric")
 }
 
 repositories {
-	maven("https://maven.isxander.dev/releases")
-	maven("https://maven.terraformersmc.com/")
+    maven("https://maven.isxander.dev/releases")
+    maven("https://maven.terraformersmc.com/")
 }
 
 loom {
-	runConfigs.all {
-		ideConfigGenerated(stonecutter.current.isActive)
-		runDir = "../../run"
-	}
-	runConfigs.remove(runConfigs["server"])
+    runConfigs.all {
+        ideConfigGenerated(stonecutter.current.isActive)
+        runDir = "../../run"
+    }
+    runConfigs.remove(runConfigs["server"])
 }
 
 dependencies {
-	minecraft("com.mojang:minecraft:$minecraft_version")
-	mappings(loom.officialMojangMappings())
-	modImplementation("net.fabricmc:fabric-loader:$fabric_loader_version")
-	modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
+    minecraft("com.mojang:minecraft:$minecraft_version")
+    implementation("net.fabricmc:fabric-loader:$fabric_loader_version")
+    implementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
 
-	modImplementation("dev.isxander:yet-another-config-lib:$yacl_version")
-	modImplementation("com.terraformersmc:modmenu:$mod_menu_version")
+    implementation("dev.isxander:yet-another-config-lib:$yacl_version")
+    implementation("com.terraformersmc:modmenu:$mod_menu_version")
 
-	implementation("ca.weblite:java-objc-bridge:${java_objective_c_bridge_version}")
+    implementation("ca.weblite:java-objc-bridge:${java_objective_c_bridge_version}")
 }
 
 tasks.processResources {
-	val props = mapOf(
-		"mod_id" to mod_id,
-		"mod_name" to mod_name,
-		"mod_version" to mod_version,
-		"mod_description" to mod_description,
+    val props = mapOf(
+        "mod_id" to mod_id,
+        "mod_name" to mod_name,
+        "mod_version" to mod_version,
+        "mod_description" to mod_description,
 
-		"java_version" to java_version,
-		"minecraft_version" to minecraft_version,
-		"fabric_loader_version" to fabric_loader_version,
-		"fabric_api_version" to fabric_api_version,
+        "java_version" to java_version,
+        "minecraft_version" to minecraft_version,
+        "fabric_loader_version" to fabric_loader_version,
+        "fabric_api_version" to fabric_api_version,
 
-		"yacl_version" to yacl_version,
-		"mod_menu_version" to mod_menu_version
-	)
+        "yacl_version" to yacl_version,
+        "mod_menu_version" to mod_menu_version
+    )
 
-	inputs.properties(props)
+    inputs.properties(props)
 
-	filesMatching("fabric.mod.json") {
-		expand(props)
-	}
+    filesMatching("fabric.mod.json") {
+        expand(props)
+    }
 
 
-	val mixinProps = mapOf(
-		"java_version" to java_version
-	)
+    val mixinProps = mapOf(
+        "java_version" to java_version
+    )
 
-	inputs.properties(mixinProps)
+    inputs.properties(mixinProps)
 
-	filesMatching("$mod_id.mixins.json") {
-		expand(mixinProps)
-	}
+    filesMatching("$mod_id.mixins.json") {
+        expand(mixinProps)
+    }
 }
 
 bloom {
-	replacement("@MOD_NAME@", mod_name)
-	replacement("@MOD_ID@", mod_id)
+    replacement("@MOD_NAME@", mod_name)
+    replacement("@MOD_ID@", mod_id)
 }
 
 tasks.withType<JavaCompile>().configureEach {
-	options.release = java_version.toInt()
+    options.release = java_version.toInt()
 }
 
 java {
-	withSourcesJar()
-	sourceCompatibility = JavaVersion.toVersion(java_version)
-	targetCompatibility = JavaVersion.toVersion(java_version)
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.toVersion(java_version)
+    targetCompatibility = JavaVersion.toVersion(java_version)
 }
 
 tasks.jar {
-	inputs.property("archivesName", base.archivesName)
+    inputs.property("archivesName", base.archivesName)
 
-	from("LICENSE") {
-		rename { "${it}_${base.archivesName.get()}" }
-	}
+    from("LICENSE") {
+        rename { "${it}_${base.archivesName.get()}" }
+    }
 }
