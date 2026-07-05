@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
-import javax.imageio.ImageIO; // Standard Java Image Loader
+import javax.imageio.ImageIO;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -51,10 +51,8 @@ public class ScreenshotManager {
             return;
         }
 
-        // Windows / Linux
         Util.ioPool().execute(() -> {
             try {
-                // Safely read the image directly from the disk file
                 BufferedImage image = ImageIO.read(file);
                 if (image != null) {
                     ImageContent content = new ImageContent(image);
