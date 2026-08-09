@@ -35,7 +35,7 @@ stonecutter {
     create(rootProject) {
         version("1.21.11").buildscript("build.obfuscated.gradle.kts")
         versions("26.1", "26.2")
-        vcsVersion = "26.2"
+        vcsVersion = "26.1"
     }
 }
 
@@ -45,4 +45,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ChatBlock"
+rootProject.name = "ScreenshotMessageEnhancer"
