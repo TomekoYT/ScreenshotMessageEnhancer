@@ -1,4 +1,4 @@
-package tomeko.screenshotmessageenhancer.mixin;
+package tomeko.screenshotmessageenhancer.mixins;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tomeko.screenshotmessageenhancer.config.ScreenshotMessageEnhancerConfig;
 import tomeko.screenshotmessageenhancer.screenshots.ScreenshotManager;
+import tomeko.screenshotmessageenhancer.utils.Buttons;
 import tomeko.screenshotmessageenhancer.utils.Constants;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 
@@ -24,8 +25,6 @@ import net.minecraft.network.chat.MutableComponent;
 public class ScreenshotRecorderMixin {
     @Inject(at = @At("HEAD"), method = "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V", cancellable = true)
     private static void saveScreenshot(File workDir, String forceName, RenderTarget target, int downscaleFactor, Consumer<Component> callback, CallbackInfo ci) {
-        if (!ScreenshotMessageEnhancerConfig.modifyScreenshotMessageEnabled) return;
-
         ci.cancel();
 
         Screenshot.takeScreenshot(target, (nativeImage) -> {
@@ -64,33 +63,33 @@ public class ScreenshotRecorderMixin {
 
                     MutableComponent message = Component.literal("Saved screenshot");
 
-                    if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddName) {
+                    if (ScreenshotMessageEnhancerConfig.showName) {
                         message.append(Component.literal(" as "));
                         message.append(Component.literal(finalFile.getName()).withStyle(ChatFormatting.UNDERLINE));
                     }
 
-                    if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddCopy) {
+                    if (ScreenshotMessageEnhancerConfig.buttons[Buttons.COPY.ordinal()]) {
                         message.append(" ");
                         message.append(Component.literal("[COPY]").withStyle(ChatFormatting.BOLD, ChatFormatting.BLUE).withStyle(style -> style
                                 .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_COPY_COMMAND + " " + currentIdx))
                                 .withHoverEvent(new HoverEvent.ShowText(Component.literal("Copy the screenshot")))));
                     }
 
-                    if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddOpen) {
+                    if (ScreenshotMessageEnhancerConfig.buttons[Buttons.OPEN.ordinal()]) {
                         message.append(" ");
                         message.append(Component.literal("[OPEN]").withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN).withStyle(style -> style
                                 .withClickEvent(new ClickEvent.OpenFile(finalFile.getAbsolutePath()))
                                 .withHoverEvent(new HoverEvent.ShowText(Component.literal("Open " + finalFile.getName())))));
                     }
 
-                    if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddOpenFolder) {
+                    if (ScreenshotMessageEnhancerConfig.buttons[Buttons.OPEN_FOLDER.ordinal()]) {
                         message.append(" ");
                         message.append(Component.literal("[OPEN FOLDER]").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD).withStyle(style -> style
                                 .withClickEvent(new ClickEvent.OpenFile(finalFolder.getAbsolutePath()))
                                 .withHoverEvent(new HoverEvent.ShowText(Component.literal(finalFolder.getPath())))));
                     }
 
-                    if (ScreenshotMessageEnhancerConfig.modifyScreenshotMessageAddDelete) {
+                    if (ScreenshotMessageEnhancerConfig.buttons[Buttons.DELETE.ordinal()]) {
                         message.append(" ");
                         message.append(Component.literal("[DELETE]").withStyle(ChatFormatting.BOLD, ChatFormatting.RED).withStyle(style -> style
                                 .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_DELETE_COMMAND + " " + currentIdx))
