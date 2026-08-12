@@ -22,7 +22,7 @@ object SMEScreenshotCopyCommand {
                         argument("pos", IntegerArgumentType.integer())
                             .executes { context ->
                                 val pos = IntegerArgumentType.getInteger(context, "pos")
-                                ScreenshotManager.copyScreenshot(pos)
+                                ScreenshotManager.copyScreenshot(pos, true)
                                 1
                             }
                     )

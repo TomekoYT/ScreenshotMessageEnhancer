@@ -1,5 +1,13 @@
 package tomeko.screenshotmessageenhancer.mixins;
 
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Screenshot;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -8,18 +16,9 @@ import tomeko.screenshotmessageenhancer.config.ScreenshotMessageEnhancerConfig;
 import tomeko.screenshotmessageenhancer.screenshots.ScreenshotManager;
 import tomeko.screenshotmessageenhancer.utils.Buttons;
 import tomeko.screenshotmessageenhancer.utils.Constants;
-import com.mojang.blaze3d.pipeline.RenderTarget;
 
 import java.io.File;
 import java.util.function.Consumer;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.util.Util;
-import net.minecraft.client.Screenshot;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
 
 @Mixin(Screenshot.class)
 public class ScreenshotRecorderMixin {
@@ -61,35 +60,39 @@ public class ScreenshotRecorderMixin {
                     ScreenshotManager.screenshotFiles.add(finalFile);
                     int currentIdx = ScreenshotManager.screenshotFiles.size() - 1;
 
+                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getAutoCopyScreenshot()) {
+                        ScreenshotManager.copyScreenshot(currentIdx, false);
+                    }
+
                     MutableComponent message = Component.literal("Saved screenshot");
 
-                    if (ScreenshotMessageEnhancerConfig.showName) {
+                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowName()) {
                         message.append(Component.literal(" as "));
                         message.append(Component.literal(finalFile.getName()).withStyle(ChatFormatting.UNDERLINE));
                     }
 
-                    if (ScreenshotMessageEnhancerConfig.buttons[Buttons.COPY.ordinal()]) {
+                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.COPY.ordinal()]) {
                         message.append(" ");
                         message.append(Component.literal("[COPY]").withStyle(ChatFormatting.BOLD, ChatFormatting.BLUE).withStyle(style -> style
                                 .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_COPY_COMMAND + " " + currentIdx))
                                 .withHoverEvent(new HoverEvent.ShowText(Component.literal("Copy the screenshot")))));
                     }
 
-                    if (ScreenshotMessageEnhancerConfig.buttons[Buttons.OPEN.ordinal()]) {
+                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.OPEN.ordinal()]) {
                         message.append(" ");
                         message.append(Component.literal("[OPEN]").withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN).withStyle(style -> style
                                 .withClickEvent(new ClickEvent.OpenFile(finalFile.getAbsolutePath()))
                                 .withHoverEvent(new HoverEvent.ShowText(Component.literal("Open " + finalFile.getName())))));
                     }
 
-                    if (ScreenshotMessageEnhancerConfig.buttons[Buttons.OPEN_FOLDER.ordinal()]) {
+                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.OPEN_FOLDER.ordinal()]) {
                         message.append(" ");
                         message.append(Component.literal("[OPEN FOLDER]").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD).withStyle(style -> style
                                 .withClickEvent(new ClickEvent.OpenFile(finalFolder.getAbsolutePath()))
                                 .withHoverEvent(new HoverEvent.ShowText(Component.literal(finalFolder.getPath())))));
                     }
 
-                    if (ScreenshotMessageEnhancerConfig.buttons[Buttons.DELETE.ordinal()]) {
+                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.DELETE.ordinal()]) {
                         message.append(" ");
                         message.append(Component.literal("[DELETE]").withStyle(ChatFormatting.BOLD, ChatFormatting.RED).withStyle(style -> style
                                 .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_DELETE_COMMAND + " " + currentIdx))

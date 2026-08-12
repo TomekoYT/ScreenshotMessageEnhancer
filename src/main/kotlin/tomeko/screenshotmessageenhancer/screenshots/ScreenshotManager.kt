@@ -20,7 +20,7 @@ object ScreenshotManager {
     private val client: Minecraft = Minecraft.getInstance()
 
     @JvmStatic
-    fun copyScreenshot(pos: Int) {
+    fun copyScreenshot(pos: Int, showMessage: Boolean) {
         if (pos >= screenshotFiles.size) return
 
         val file = screenshotFiles[pos]
@@ -54,7 +54,7 @@ object ScreenshotManager {
                     pasteboard.sendBoolean("writeObjects:", array)
 
                     client.execute {
-                        sendChatMessage(message)
+                        sendChatMessage(message, showMessage)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -75,7 +75,7 @@ object ScreenshotManager {
                         .setContents(content, null)
 
                     client.execute {
-                        sendChatMessage(message)
+                        sendChatMessage(message, showMessage)
                     }
                 }
             } catch (e: Exception) {
@@ -86,7 +86,7 @@ object ScreenshotManager {
                 }
 
                 client.execute {
-                    sendChatMessage(errorMessage)
+                    sendChatMessage(errorMessage, showMessage)
                 }
 
                 e.printStackTrace()
@@ -108,7 +108,7 @@ object ScreenshotManager {
                     }
 
                 client.execute {
-                    sendChatMessage(message)
+                    sendChatMessage(message, true)
                 }
             } else {
                 val errorMessage = Component.literal(
@@ -118,21 +118,21 @@ object ScreenshotManager {
                 }
 
                 client.execute {
-                    sendChatMessage(errorMessage)
+                    sendChatMessage(errorMessage, true)
                 }
             }
         }
     }
 
-    private fun sendChatMessage(message: Component) {
-        if (client.player != null) {
-            //? if >= 26.2 {
-            /*client.gui.hud.chat.addClientSystemMessage(message)
-            *///?} else if >= 26.1 {
-            client.gui.chat.addClientSystemMessage(message)
-            //?} else {
-            /*client.gui.chat.addMessage(message)
-            *///?}
-        }
+    private fun sendChatMessage(message: Component, showMessage: Boolean) {
+        if (!showMessage || client.player == null) return
+
+        //? if >= 26.2 {
+        /*client.gui.hud.chat.addClientSystemMessage(message)
+        *///?} else if >= 26.1 {
+        client.gui.chat.addClientSystemMessage(message)
+        //?} else {
+        /*client.gui.chat.addMessage(message)
+        *///?}
     }
 }

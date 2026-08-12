@@ -29,7 +29,6 @@ object ScreenshotMessageEnhancerConfig : Config(
 
     private const val CATEGORY_GENERAL = "General"
 
-    @JvmField
     @Switch(
         title = "Show Name",
         description = "Show screenshot name in the message",
@@ -37,7 +36,6 @@ object ScreenshotMessageEnhancerConfig : Config(
     )
     var showName = false
 
-    @JvmField
     @MultiSelectDropdown(
         title = "Buttons",
         description = "Buttons for Screenshot Message Enhancer",
@@ -51,6 +49,12 @@ object ScreenshotMessageEnhancerConfig : Config(
         category = CATEGORY_GENERAL
     )
     var buttons: BooleanArray = BooleanArray(Buttons.entries.size) { true }
+
+    @Switch(
+        title = "Automatically Copy Screenshot",
+        category = CATEGORY_GENERAL
+    )
+    var autoCopyScreenshot = false
 
 
     private const val CATEGORY_DEBUG = "Debug"
