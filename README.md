@@ -18,3 +18,4 @@ Enhance screenshot messages with COPY, OPEN, OPEN FOLDER and DELETE buttons
 ### Modify Screenshot Message
 - Add screenshot name
 - Add COPY, OPEN, OPEN FOLDER, DELETE buttons
+- Automatically Copy Screenshot
