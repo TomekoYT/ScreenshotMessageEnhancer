@@ -6,4 +6,8 @@ object Constants {
 
     const val SCREENSHOT_COPY_COMMAND = "smescreenshotcopy"
     const val SCREENSHOT_DELETE_COMMAND = "smescreenshotdelete"
+
+    const val SCREENSHOT_UPLOAD_COMMAND = "smescreenshotupload"
+    const val SCREENSHOT_UPLOAD_COPY_COMMAND = "smescreenshotuploadcopy"
+    const val SCREENSHOT_UPLOAD_URL = "https://catbox.moe/user/api.php"
 }

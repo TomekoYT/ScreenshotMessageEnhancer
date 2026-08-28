@@ -44,7 +44,8 @@ object ScreenshotMessageEnhancerConfig : Config(
             "Copy",
             "Open",
             "Open Folder",
-            "Delete"
+            "Delete",
+            "Upload"
         ],
         category = CATEGORY_GENERAL
     )
