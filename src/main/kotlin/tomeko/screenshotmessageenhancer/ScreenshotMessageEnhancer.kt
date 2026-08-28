@@ -13,8 +13,7 @@ class ScreenshotMessageEnhancer : ClientModInitializer {
         ScreenshotMessageEnhancerCommand.register()
         SMEScreenshotCopyCommand.register()
         SMEScreenshotDeleteCommand.register()
-        SMEScreenshotUploadCommand.registerUpload()
-        SMEScreenshotUploadCommand.registerCopy()
+        SMEScreenshotUploadCommand.register()
 
         ScreenshotMessageEnhancerConfig.register()
 

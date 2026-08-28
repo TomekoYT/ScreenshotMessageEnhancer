@@ -14,7 +14,8 @@ import tomeko.screenshotmessageenhancer.screenshots.ScreenshotManager
 import tomeko.screenshotmessageenhancer.utils.Constants
 
 object SMEScreenshotUploadCommand {
-    fun registerUpload() {
+
+    fun register() {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             dispatcher.register(
                 literal(Constants.SCREENSHOT_UPLOAD_COMMAND)
@@ -30,19 +31,4 @@ object SMEScreenshotUploadCommand {
         }
     }
 
-    fun registerCopy() {
-        ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            dispatcher.register(
-                literal(Constants.SCREENSHOT_UPLOAD_COPY_COMMAND)
-                    .then(
-                        argument("url", StringArgumentType.greedyString())
-                            .executes { context ->
-                                val url = StringArgumentType.getString(context, "url")
-                                ScreenshotManager.copyUrl(url)
-                                1
-                            }
-                    )
-            )
-        }
-    }
 }

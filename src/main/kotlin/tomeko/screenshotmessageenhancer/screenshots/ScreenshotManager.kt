@@ -3,9 +3,7 @@ package tomeko.screenshotmessageenhancer.screenshots
 import ca.weblite.objc.Client
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
-import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
-import tomeko.screenshotmessageenhancer.utils.Constants.SCREENSHOT_UPLOAD_COPY_COMMAND
 //? if >= 1.21.11 {
 import net.minecraft.util.Util
 //?} else {
@@ -133,34 +131,15 @@ object ScreenshotManager {
         val file = screenshotFiles[pos]
         if (!file.exists()) return
 
-        sendChatMessage(Component.literal("Uploading screenshot!").withStyle(ChatFormatting.YELLOW), true)
+        sendChatMessage(Component.literal("Uploading screenshot...")
+            .withStyle(ChatFormatting.YELLOW), true)
 
         Util.nonCriticalIoPool().execute {
             ScreenShotUploader.upload(file).thenAccept { url ->
-                val messageComponent = Component.literal("Screenshot uploaded:")
-                    .append(" ")
-                    .append(Component.literal("[COPY]")
-                        .withStyle(ChatFormatting.BOLD, ChatFormatting.YELLOW)
-                        .withStyle { style -> style
-                            //? if >= 1.21.11 {
-                            .withClickEvent(ClickEvent.RunCommand("$SCREENSHOT_UPLOAD_COPY_COMMAND $url"))
-                            //?} else {
-                            /*.withClickEvent(ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + SCREENSHOT_UPLOAD_COPY_COMMAND + " " + url))
-                            *///?}
-                        }
-                    )
-                    .append(" ")
-                    .append(Component.literal("[OPEN]")
-                        .withStyle(ChatFormatting.BOLD, ChatFormatting.YELLOW)
-                        .withStyle { style -> style
-                            //? if >= 1.21.11 {
-                            .withClickEvent(ClickEvent.OpenUrl(URI.create(url)))
-                            //?} else {
-                            /*.withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, url))
-                            *///?}
-                        }
-                    )
+                val messageComponent = Component.literal("Screenshot uploaded + link copied to clipboard!")
                     .withStyle(ChatFormatting.YELLOW)
+
+                copyUrl(url)
 
                 sendChatMessage(messageComponent, true)
             }.exceptionally { error ->
@@ -172,8 +151,6 @@ object ScreenshotManager {
 
     fun copyUrl(url: String){
         client.keyboardHandler.clipboard = url
-
-        sendChatMessage(Component.literal("Url copied to clipboard!").withStyle(ChatFormatting.YELLOW), true)
     }
 
     private fun sendChatMessage(message: Component, showMessage: Boolean) {
