@@ -4,7 +4,11 @@ import ca.weblite.objc.Client
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+//? if >= 1.21.11 {
 import net.minecraft.util.Util
+//?} else {
+/*import net.minecraft.Util
+*///?}
 import java.awt.Toolkit
 import java.awt.image.BufferedImage
 import java.io.File
@@ -13,13 +17,10 @@ import java.util.Locale
 import javax.imageio.ImageIO
 
 object ScreenshotManager {
-
-    @JvmField
     val screenshotFiles: ArrayList<File> = ArrayList()
 
     private val client: Minecraft = Minecraft.getInstance()
 
-    @JvmStatic
     fun copyScreenshot(pos: Int, showMessage: Boolean) {
         if (pos >= screenshotFiles.size) return
 
@@ -94,7 +95,6 @@ object ScreenshotManager {
         }
     }
 
-    @JvmStatic
     fun deleteScreenshot(pos: Int) {
         if (pos >= screenshotFiles.size) return
 
@@ -112,7 +112,7 @@ object ScreenshotManager {
                 }
             } else {
                 val errorMessage = Component.literal(
-                    "Could not delete screenshot (File not found)"
+                    "Couldn't delete screenshot (File not found)"
                 ).withStyle { style ->
                     style.withColor(ChatFormatting.GOLD)
                 }

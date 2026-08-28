@@ -1,13 +1,18 @@
 package tomeko.screenshotmessageenhancer.mixins;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Screenshot;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+//? if >= 1.21.11 {
 import net.minecraft.util.Util;
+//?} else {
+/*import net.minecraft.Util;
+*///?}
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,91 +27,199 @@ import java.util.function.Consumer;
 
 @Mixin(Screenshot.class)
 public class ScreenshotRecorderMixin {
-    @Inject(at = @At("HEAD"), method = "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V", cancellable = true)
-    private static void saveScreenshot(File workDir, String forceName, RenderTarget target, int downscaleFactor, Consumer<Component> callback, CallbackInfo ci) {
+    @Inject(
+            method = "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;Ljava/util/function/Consumer;)V",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private static void saveScreenshot(
+            File workDir,
+            String forceName,
+            RenderTarget target,
+            Consumer<Component> callback,
+            CallbackInfo ci
+    ) {
         ci.cancel();
 
+        //? if >= 1.21.11 {
         Screenshot.takeScreenshot(target, (nativeImage) -> {
-            File screenshotsFolder = new File(workDir, "screenshots");
+        //?} else {
+        /*NativeImage nativeImage = Screenshot.takeScreenshot(target);
+        *///?}
 
-            if (!screenshotsFolder.exists()) {
-                screenshotsFolder.mkdirs();
-            }
+        File screenshotsFolder = new File(workDir, "screenshots");
 
-            File screenshotFile;
-            if (forceName == null) {
-                screenshotFile = getScreenshotFilename(screenshotsFolder);
-            } else {
-                screenshotFile = new File(screenshotsFolder, forceName);
-            }
+        if (!screenshotsFolder.exists()) {
+            screenshotsFolder.mkdirs();
+        }
 
-            File accessibleScreenshotFile;
-            File accessibleScreenshotsFolder;
+        File screenshotFile;
+
+        if (forceName == null) {
+            screenshotFile = getScreenshotFilename(screenshotsFolder);
+        } else {
+            screenshotFile = new File(screenshotsFolder, forceName);
+        }
+
+        File accessibleScreenshotFile;
+        File accessibleScreenshotsFolder;
+
+        try {
+            accessibleScreenshotFile = screenshotFile.getCanonicalFile();
+            accessibleScreenshotsFolder = screenshotsFolder.getCanonicalFile();
+        } catch (Exception e) {
+            accessibleScreenshotFile = screenshotFile.getAbsoluteFile();
+            accessibleScreenshotsFolder = screenshotsFolder.getAbsoluteFile();
+        }
+
+        File finalFile = accessibleScreenshotFile;
+        File finalFolder = accessibleScreenshotsFolder;
+
+        Util.ioPool().execute(() -> {
             try {
-                accessibleScreenshotFile = screenshotFile.getCanonicalFile();
-                accessibleScreenshotsFolder = screenshotsFolder.getCanonicalFile();
-            } catch (Exception e) {
-                accessibleScreenshotFile = screenshotFile.getAbsoluteFile();
-                accessibleScreenshotsFolder = screenshotsFolder.getAbsoluteFile();
-            }
+                nativeImage.writeToFile(finalFile);
 
-            File finalFile = accessibleScreenshotFile;
-            File finalFolder = accessibleScreenshotsFolder;
+                ScreenshotManager.INSTANCE.getScreenshotFiles().add(finalFile);
+                int currentIdx = ScreenshotManager.INSTANCE.getScreenshotFiles().size() - 1;
 
-            Util.ioPool().execute(() -> {
-                try {
-                    nativeImage.writeToFile(finalFile);
-
-                    ScreenshotManager.screenshotFiles.add(finalFile);
-                    int currentIdx = ScreenshotManager.screenshotFiles.size() - 1;
-
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getAutoCopyScreenshot()) {
-                        ScreenshotManager.copyScreenshot(currentIdx, false);
-                    }
-
-                    MutableComponent message = Component.literal("Saved screenshot");
-
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowName()) {
-                        message.append(Component.literal(" as "));
-                        message.append(Component.literal(finalFile.getName()).withStyle(ChatFormatting.UNDERLINE));
-                    }
-
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.COPY.ordinal()]) {
-                        message.append(" ");
-                        message.append(Component.literal("[COPY]").withStyle(ChatFormatting.BOLD, ChatFormatting.BLUE).withStyle(style -> style
-                                .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_COPY_COMMAND + " " + currentIdx))
-                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Copy the screenshot")))));
-                    }
-
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.OPEN.ordinal()]) {
-                        message.append(" ");
-                        message.append(Component.literal("[OPEN]").withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN).withStyle(style -> style
-                                .withClickEvent(new ClickEvent.OpenFile(finalFile.getAbsolutePath()))
-                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Open " + finalFile.getName())))));
-                    }
-
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.OPEN_FOLDER.ordinal()]) {
-                        message.append(" ");
-                        message.append(Component.literal("[OPEN FOLDER]").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD).withStyle(style -> style
-                                .withClickEvent(new ClickEvent.OpenFile(finalFolder.getAbsolutePath()))
-                                .withHoverEvent(new HoverEvent.ShowText(Component.literal(finalFolder.getPath())))));
-                    }
-
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.DELETE.ordinal()]) {
-                        message.append(" ");
-                        message.append(Component.literal("[DELETE]").withStyle(ChatFormatting.BOLD, ChatFormatting.RED).withStyle(style -> style
-                                .withClickEvent(new ClickEvent.RunCommand(Constants.SCREENSHOT_DELETE_COMMAND + " " + currentIdx))
-                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Delete the screenshot")))));
-                    }
-
-                    callback.accept(message);
-                } catch (Exception e) {
-                    callback.accept(Component.literal("Failed to save screenshot: " + e.getMessage()).withStyle(ChatFormatting.RED));
-                } finally {
-                    nativeImage.close();
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getAutoCopyScreenshot()) {
+                    ScreenshotManager.INSTANCE.copyScreenshot(currentIdx, false);
                 }
-            });
+
+                MutableComponent message = Component.literal("Saved screenshot");
+
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowName()) {
+                    message.append(Component.literal(" as "));
+                    message.append(Component.literal(finalFile.getName()).withStyle(ChatFormatting.UNDERLINE));
+                }
+
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.COPY.ordinal()]) {
+                    String command =
+                            //? if = 1.21.1 {
+                            /*"/" +
+                                    *///?}
+                                        Constants.SCREENSHOT_COPY_COMMAND + " " + currentIdx;
+                    Component text = Component.literal("Copy the screenshot");
+
+                    message.append(" ");
+                    message.append(
+                            Component.literal("[COPY]")
+                                    .withStyle(ChatFormatting.BOLD, ChatFormatting.BLUE)
+                                    .withStyle(style -> style
+                                            .withClickEvent(
+                                                    //? if >= 1.21.11 {
+                                                    new ClickEvent.RunCommand(command)
+                                                    //?} else {
+                                                    /*new ClickEvent(ClickEvent.Action.RUN_COMMAND, command)
+                                                    *///?}
+                                            )
+                                            .withHoverEvent(
+                                                    //? if >= 1.21.11 {
+                                                    new HoverEvent.ShowText(text)
+                                                    //?} else {
+                                                    /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, text)
+                                                    *///?}
+                                            )
+                                    )
+                    );
+                }
+
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.OPEN.ordinal()]) {
+                    String path = finalFile.getAbsolutePath();
+                    Component text = Component.literal("Open " + finalFile.getName());
+
+                    message.append(" ");
+                    message.append(
+                            Component.literal("[OPEN]")
+                                    .withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN)
+                                    .withStyle(style -> style
+                                            .withClickEvent(
+                                                    //? if >= 1.21.11 {
+                                                    new ClickEvent.OpenFile(path)
+                                                    //?} else {
+                                                    /*new ClickEvent(ClickEvent.Action.OPEN_FILE, path)
+                                                    *///?}
+                                            )
+                                            .withHoverEvent(
+                                                    //? if >= 1.21.11 {
+                                                    new HoverEvent.ShowText(text)
+                                                    //?} else {
+                                                    /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, text)
+                                                    *///?}
+                                            )
+                                    )
+                    );
+                }
+
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.OPEN_FOLDER.ordinal()]) {
+                    String path = finalFolder.getAbsolutePath();
+                    Component text = Component.literal(finalFolder.getPath());
+
+                    message.append(" ");
+                    message.append(
+                            Component.literal("[OPEN FOLDER]")
+                                    .withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD)
+                                    .withStyle(style -> style
+                                            .withClickEvent(
+                                                    //? if >= 1.21.11 {
+                                                    new ClickEvent.OpenFile(path)
+                                                    //?} else {
+                                                    /*new ClickEvent(ClickEvent.Action.OPEN_FILE, path)
+                                                    *///?}
+                                            )
+                                            .withHoverEvent(
+                                                    //? if >= 1.21.11 {
+                                                    new HoverEvent.ShowText(text)
+                                                    //?} else {
+                                                    /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, text)
+                                                    *///?}
+                                            )
+                                    )
+                    );
+                }
+
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.DELETE.ordinal()]) {
+                    String command =
+                            //? if = 1.21.1 {
+                            /*"/" +
+                                    *///?}
+                                    Constants.SCREENSHOT_DELETE_COMMAND + " " + currentIdx;
+                    Component text = Component.literal("Delete the screenshot");
+
+                    message.append(" ");
+                    message.append(
+                            Component.literal("[DELETE]")
+                                    .withStyle(ChatFormatting.BOLD, ChatFormatting.RED)
+                                    .withStyle(style -> style
+                                            .withClickEvent(
+                                                    //? if >= 1.21.11 {
+                                                    new ClickEvent.RunCommand(command)
+                                                    //?} else {
+                                                    /*new ClickEvent(ClickEvent.Action.RUN_COMMAND, command)
+                                                    *///?}
+                                            )
+                                            .withHoverEvent(
+                                                    //? if >= 1.21.11 {
+                                                    new HoverEvent.ShowText(text)
+                                                    //?} else {
+                                                    /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, text)
+                                                    *///?}
+                                            )
+                                    )
+                    );
+                }
+
+                callback.accept(message);
+
+            } catch (Exception e) {
+                callback.accept(Component.literal("Failed to save screenshot: " + e.getMessage()).withStyle(ChatFormatting.RED));
+            } finally {
+                nativeImage.close();
+            }
         });
+        //? if >= 1.21.11 {
+        });
+        //?}
     }
 
     private static File getScreenshotFilename(File directory) {
@@ -115,6 +228,7 @@ public class ScreenshotRecorderMixin {
 
         while (true) {
             String fileName;
+
             if (i == 1) {
                 fileName = time + ".png";
             } else {
@@ -122,9 +236,11 @@ public class ScreenshotRecorderMixin {
             }
 
             File file = new File(directory, fileName);
+
             if (!file.exists()) {
                 return file;
             }
+
             i++;
         }
     }

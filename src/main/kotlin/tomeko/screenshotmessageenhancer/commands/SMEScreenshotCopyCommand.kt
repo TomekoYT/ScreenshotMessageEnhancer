@@ -13,7 +13,6 @@ import tomeko.screenshotmessageenhancer.screenshots.ScreenshotManager
 import tomeko.screenshotmessageenhancer.utils.Constants
 
 object SMEScreenshotCopyCommand {
-    @JvmStatic
     fun register() {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             dispatcher.register(
