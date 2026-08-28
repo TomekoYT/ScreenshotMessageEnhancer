@@ -6,5 +6,7 @@ enum class Buttons(
     COPY("Copy"),
     OPEN("Open"),
     OPEN_FOLDER("Open Folder"),
-    DELETE("Delete");
+    DELETE("Delete"),
+
+    UPLOAD("Upload");
 }

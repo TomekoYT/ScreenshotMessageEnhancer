@@ -209,6 +209,37 @@ public class ScreenshotRecorderMixin {
                     );
                 }
 
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.UPLOAD.ordinal()]) {
+                    String command =
+                            //? if = 1.21.1 {
+                            /*"/" +
+                             *///?}
+                            Constants.SCREENSHOT_UPLOAD_COMMAND + " " + currentIdx;
+                    Component text = Component.literal("Upload the screenshot");
+
+                    message.append(" ");
+                    message.append(
+                            Component.literal("[UPLOAD]")
+                                    .withStyle(ChatFormatting.BOLD, ChatFormatting.YELLOW)
+                                    .withStyle(style -> style
+                                            .withClickEvent(
+                                                    //? if >= 1.21.11 {
+                                                    new ClickEvent.RunCommand(command)
+                                                    //?} else {
+                                                    /*new ClickEvent(ClickEvent.Action.RUN_COMMAND, command)
+                                                     *///?}
+                                            )
+                                            .withHoverEvent(
+                                                    //? if >= 1.21.11 {
+                                                    new HoverEvent.ShowText(text)
+                                                    //?} else {
+                                                    /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, text)
+                                                     *///?}
+                                            )
+                                    )
+                    );
+                }
+
                 callback.accept(message);
 
             } catch (Exception e) {

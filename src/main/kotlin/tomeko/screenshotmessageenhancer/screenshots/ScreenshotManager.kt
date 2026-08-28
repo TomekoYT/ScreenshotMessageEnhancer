@@ -12,6 +12,7 @@ import net.minecraft.util.Util
 import java.awt.Toolkit
 import java.awt.image.BufferedImage
 import java.io.File
+import java.net.URI
 import java.util.ArrayList
 import java.util.Locale
 import javax.imageio.ImageIO
@@ -122,6 +123,34 @@ object ScreenshotManager {
                 }
             }
         }
+    }
+
+    fun uploadScreenshot(pos: Int){
+        if (pos >= screenshotFiles.size) return
+
+        val file = screenshotFiles[pos]
+        if (!file.exists()) return
+
+        sendChatMessage(Component.literal("Uploading screenshot...")
+            .withStyle(ChatFormatting.YELLOW), true)
+
+        Util.nonCriticalIoPool().execute {
+            ScreenShotUploader.upload(file).thenAccept { url ->
+                val messageComponent = Component.literal("Screenshot uploaded + link copied to clipboard!")
+                    .withStyle(ChatFormatting.YELLOW)
+
+                copyUrl(url)
+
+                sendChatMessage(messageComponent, true)
+            }.exceptionally { error ->
+                error.printStackTrace()
+                null
+            }
+        }
+    }
+
+    fun copyUrl(url: String){
+        client.keyboardHandler.clipboard = url
     }
 
     private fun sendChatMessage(message: Component, showMessage: Boolean) {
