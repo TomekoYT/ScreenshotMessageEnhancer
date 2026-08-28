@@ -7,6 +7,5 @@ enum class Buttons(
     OPEN("Open"),
     OPEN_FOLDER("Open Folder"),
     DELETE("Delete"),
-
     UPLOAD("Upload");
 }

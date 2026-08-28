@@ -1,6 +1,6 @@
 package tomeko.screenshotmessageenhancer.screenshots
 
-import tomeko.screenshotmessageenhancer.utils.Constants.SCREENSHOT_UPLOAD_URL
+import tomeko.screenshotmessageenhancer.utils.Constants
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.net.URI
@@ -11,8 +11,7 @@ import java.nio.charset.StandardCharsets
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
-object ScreenShotUploader {
-
+object ScreenshotUploader {
     private val httpClient = HttpClient.newHttpClient()
 
     fun upload(file: File): CompletableFuture<String> {
@@ -20,7 +19,7 @@ object ScreenShotUploader {
         val body = createBody(file, boundary);
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create(SCREENSHOT_UPLOAD_URL))
+            .uri(URI.create(Constants.SCREENSHOT_UPLOAD_URL))
             .header("Content-Type", "multipart/form-data; boundary=$boundary")
             .POST(HttpRequest.BodyPublishers.ofByteArray(body))
             .build()

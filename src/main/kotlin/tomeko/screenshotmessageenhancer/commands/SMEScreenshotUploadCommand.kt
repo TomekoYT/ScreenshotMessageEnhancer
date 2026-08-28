@@ -1,7 +1,6 @@
 package tomeko.screenshotmessageenhancer.commands
 
 import com.mojang.brigadier.arguments.IntegerArgumentType
-import com.mojang.brigadier.arguments.StringArgumentType
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 //? if >= 26.1 {
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument
@@ -14,7 +13,6 @@ import tomeko.screenshotmessageenhancer.screenshots.ScreenshotManager
 import tomeko.screenshotmessageenhancer.utils.Constants
 
 object SMEScreenshotUploadCommand {
-
     fun register() {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             dispatcher.register(

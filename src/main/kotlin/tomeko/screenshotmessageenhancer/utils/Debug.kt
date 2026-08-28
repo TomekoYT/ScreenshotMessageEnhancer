@@ -7,7 +7,6 @@ import tomeko.screenshotmessageenhancer.config.ScreenshotMessageEnhancerConfig
 object Debug {
     private val LOGGER: Logger = LoggerFactory.getLogger(Constants.MOD_ID)
 
-    @JvmStatic
     fun log(message: String) {
         if (!ScreenshotMessageEnhancerConfig.debugModeEnabled) return
 
