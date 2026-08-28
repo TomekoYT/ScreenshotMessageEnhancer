@@ -21,7 +21,7 @@ Enhance screenshot messages with COPY, OPEN, OPEN FOLDER, DELETE, UPLOAD buttons
 - Add UPLOAD button, allowing to upload screenshot to [Catbox](https://catbox.moe/)
 
 ### Automatically Copy Screenshot
-- automatically copy screenshot to clipboard
+- Automatically copy screenshot to clipboard
 
 ## Special Thanks
 - [harmvdhorst](https://github.com/harmvdhorst) - [Catbox](https://catbox.moe/) screenshot uploading
