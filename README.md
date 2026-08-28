@@ -17,8 +17,8 @@ Enhance screenshot messages with COPY, OPEN, OPEN FOLDER, DELETE, UPLOAD buttons
 
 ### Modify Screenshot Message
 - Show screenshot name
-- Add COPY, OPEN, OPEN FOLDER, DELETE buttons
-- Add UPLOAD button, allowing to upload screenshot to [Catbox](https://catbox.moe/)
+- COPY, OPEN, OPEN FOLDER, DELETE buttons
+- UPLOAD button, allowing to upload screenshot to [Catbox](https://catbox.moe/)
 
 ### Automatically Copy Screenshot
 - Automatically copy screenshot to clipboard
