@@ -11,11 +11,14 @@
 </a>
 
 # Screenshot Message Enhancer
-Enhance screenshot messages with COPY, OPEN, OPEN FOLDER and DELETE buttons
+Enhance screenshot messages with COPY, OPEN, OPEN FOLDER, DELETE, UPLOAD buttons
 
 ## Features
 
 ### Modify Screenshot Message
-- Add screenshot name
+- Show screenshot name
 - Add COPY, OPEN, OPEN FOLDER, DELETE buttons
-- Automatically Copy Screenshot
+- Add UPLOAD button, allowing to upload screenshot to [Catbox](https://catbox.moe/)
+
+### Automatically Copy Screenshot
+- automatically copy screenshot to clipboard
