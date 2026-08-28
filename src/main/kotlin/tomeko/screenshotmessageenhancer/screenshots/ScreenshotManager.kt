@@ -12,7 +12,6 @@ import net.minecraft.util.Util
 import java.awt.Toolkit
 import java.awt.image.BufferedImage
 import java.io.File
-import java.net.URI
 import java.util.ArrayList
 import java.util.Locale
 import javax.imageio.ImageIO
@@ -135,22 +134,20 @@ object ScreenshotManager {
             .withStyle(ChatFormatting.YELLOW), true)
 
         Util.nonCriticalIoPool().execute {
-            ScreenShotUploader.upload(file).thenAccept { url ->
+            ScreenshotUploader.upload(file).thenAccept { url ->
                 val messageComponent = Component.literal("Screenshot uploaded + link copied to clipboard!")
                     .withStyle(ChatFormatting.YELLOW)
 
-                copyUrl(url)
+                client.keyboardHandler.clipboard = url
 
-                sendChatMessage(messageComponent, true)
+                client.execute {
+                    sendChatMessage(messageComponent, true)
+                }
             }.exceptionally { error ->
                 error.printStackTrace()
                 null
             }
         }
-    }
-
-    fun copyUrl(url: String){
-        client.keyboardHandler.clipboard = url
     }
 
     private fun sendChatMessage(message: Component, showMessage: Boolean) {
