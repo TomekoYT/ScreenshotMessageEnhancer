@@ -1,7 +1,9 @@
 package tomeko.screenshotmessageenhancer.mixins;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.platform.NativeImage;
+//? if = 1.21.1 {
+//import com.mojang.blaze3d.platform.NativeImage;
+//?}
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Screenshot;
 import net.minecraft.network.chat.ClickEvent;
@@ -28,14 +30,22 @@ import java.util.function.Consumer;
 @Mixin(Screenshot.class)
 public class ScreenshotRecorderMixin {
     @Inject(
-            method = "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;Ljava/util/function/Consumer;)V",
+            method =
+                    //? if >= 1.21.11 {
+                    "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V",
+                    //?} else {
+                    //"grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;Ljava/util/function/Consumer;)V",
+            //?}
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void saveScreenshot(
+    private static void screenshotmessageenhancer$saveScreenshot(
             File workDir,
             String forceName,
             RenderTarget target,
+            //? if >= 1.21.11 {
+            int downscaleFactor,
+            //?}
             Consumer<Component> callback,
             CallbackInfo ci
     ) {
@@ -56,7 +66,7 @@ public class ScreenshotRecorderMixin {
         File screenshotFile;
 
         if (forceName == null) {
-            screenshotFile = getScreenshotFilename(screenshotsFolder);
+            screenshotFile = screenshotmessageenhancer$getScreenshotFilename(screenshotsFolder);
         } else {
             screenshotFile = new File(screenshotsFolder, forceName);
         }
@@ -253,7 +263,7 @@ public class ScreenshotRecorderMixin {
         //?}
     }
 
-    private static File getScreenshotFilename(File directory) {
+    private static File screenshotmessageenhancer$getScreenshotFilename(File directory) {
         String time = Util.getFilenameFormattedDateTime();
         int i = 1;
 
