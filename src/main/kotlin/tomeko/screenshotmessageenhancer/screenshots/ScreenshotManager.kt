@@ -4,7 +4,7 @@ import ca.weblite.objc.Client
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-//? if >= 1.21.11 {
+//? if >= 1.21.11-fabric {
 import net.minecraft.util.Util
 //?} else {
 /*import net.minecraft.Util
@@ -153,9 +153,9 @@ object ScreenshotManager {
     private fun sendChatMessage(message: Component, showMessage: Boolean) {
         if (!showMessage || client.player == null) return
 
-        //? if >= 26.2 {
+        //? if >= 26.2-fabric {
         /*client.gui.hud.chat.addClientSystemMessage(message)
-        *///?} else if >= 26.1 {
+        *///?} else if >= 26.1-fabric {
         client.gui.chat.addClientSystemMessage(message)
         //?} else {
         /*client.gui.chat.addMessage(message)

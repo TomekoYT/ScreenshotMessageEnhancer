@@ -9,6 +9,9 @@ pluginManagement {
         maven("https://maven.minecraftforge.net/")
         maven("https://maven.fabricmc.net")
 
+        maven("https://maven.ornithemc.net/releases")
+        maven("https://maven.ornithemc.net/snapshots")
+
         maven("https://maven.architectury.dev/")
         maven("https://oss.sonatype.org/content/repositories/snapshots")
         maven("https://jitpack.io/")
@@ -33,9 +36,9 @@ plugins {
 
 stonecutter {
     create(rootProject) {
-        versions("1.21.1", "1.21.11").buildscript("build.obfuscated.gradle.kts")
-        versions("26.1", "26.2")
-        vcsVersion = "26.1"
+        versions("1.21.1-fabric", "1.21.11-fabric").buildscript("build.obfuscated.gradle.kts")
+        versions("26.1-fabric", "26.2-fabric")
+        vcsVersion = "26.1-fabric"
     }
 }
 

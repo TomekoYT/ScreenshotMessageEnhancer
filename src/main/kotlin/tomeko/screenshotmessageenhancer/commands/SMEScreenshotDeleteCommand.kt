@@ -2,7 +2,7 @@ package tomeko.screenshotmessageenhancer.commands
 
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
-//? if >= 26.1 {
+//? if >= 26.1-fabric {
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal
 //?} else {

@@ -18,17 +18,6 @@ val modMenuVersion = project.property("mod_menu_version") as String
 
 val java_objective_c_bridge_version = project.property("java_objective_c_bridge_version") as String
 
-plugins {
-    id("net.fabricmc.fabric-loom-remap") version "1.17-SNAPSHOT"
-    id("org.jetbrains.kotlin.jvm") version "2.4.10"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.4.10"
-    id("dev.deftu.gradle.bloom") version "0.2.0"
-}
-
-base {
-    archivesName.set("$modArchivesName-$modVersion-${minecraftVersion}_fabric")
-}
-
 repositories {
     mavenCentral()
     google()
@@ -38,6 +27,17 @@ repositories {
     maven("https://repo.polyfrost.org/releases")
     maven("https://repo.polyfrost.org/snapshots")
     maven("https://maven.terraformersmc.com/")
+}
+
+plugins {
+    id("net.fabricmc.fabric-loom-remap") version "1.17-SNAPSHOT"
+    id("org.jetbrains.kotlin.jvm") version "2.4.10"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.4.10"
+    id("dev.deftu.gradle.bloom") version "0.2.0"
+}
+
+base {
+    archivesName.set("$modArchivesName-$modVersion-${minecraftVersion}_fabric")
 }
 
 loom {

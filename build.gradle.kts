@@ -16,18 +16,7 @@ val fabricLanguageKotlinVersion = project.property("fabric_language_kotlin_versi
 val oneconfigVersion = project.property("oneconfig_version") as String
 val modMenuVersion = project.property("mod_menu_version") as String
 
-val java_objective_c_bridge_version = project.property("java_objective_c_bridge_version") as String
-
-plugins {
-    id("net.fabricmc.fabric-loom") version "1.17-SNAPSHOT"
-    id("org.jetbrains.kotlin.jvm") version "2.4.10"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.4.10"
-    id("dev.deftu.gradle.bloom") version "0.2.0"
-}
-
-base {
-    archivesName.set("$modArchivesName-$modVersion-$minecraftVersion+_fabric")
-}
+val javaObjectiveCBridgeVersion = project.property("java_objective_c_bridge_version") as String
 
 repositories {
     mavenCentral()
@@ -38,6 +27,17 @@ repositories {
     maven("https://repo.polyfrost.org/releases")
     maven("https://repo.polyfrost.org/snapshots")
     maven("https://maven.terraformersmc.com/")
+}
+
+plugins {
+    id("net.fabricmc.fabric-loom") version "1.17-SNAPSHOT"
+    id("org.jetbrains.kotlin.jvm") version "2.4.10"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.4.10"
+    id("dev.deftu.gradle.bloom") version "0.2.0"
+}
+
+base {
+    archivesName.set("$modArchivesName-$modVersion-$minecraftVersion+_fabric")
 }
 
 loom {
@@ -53,7 +53,7 @@ dependencies {
     implementation("org.polyfrost.oneconfig:$minecraftVersion-fabric:$oneconfigVersion")
     implementation("com.terraformersmc:modmenu:$modMenuVersion")
 
-    implementation("ca.weblite:java-objc-bridge:${java_objective_c_bridge_version}")
+    implementation("ca.weblite:java-objc-bridge:${javaObjectiveCBridgeVersion}")
 }
 
 bloom {
