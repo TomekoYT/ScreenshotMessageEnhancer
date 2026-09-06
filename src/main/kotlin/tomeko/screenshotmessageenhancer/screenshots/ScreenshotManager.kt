@@ -1,6 +1,5 @@
 package tomeko.screenshotmessageenhancer.screenshots
 
-import ca.weblite.objc.Client
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
@@ -13,7 +12,6 @@ import java.awt.Toolkit
 import java.awt.image.BufferedImage
 import java.io.File
 import java.util.ArrayList
-import java.util.Locale
 import javax.imageio.ImageIO
 
 object ScreenshotManager {
@@ -34,40 +32,6 @@ object ScreenshotManager {
 
         val message = Component.literal("Screenshot copied to clipboard!")
             .withStyle { style -> style.withColor(ChatFormatting.GREEN) }
-
-        if (System.getProperty("os.name").lowercase(Locale.ROOT).contains("mac")) {
-            Util.ioPool().execute {
-                try {
-                    val macClient = Client.getInstance()
-                    val url = macClient.sendProxy(
-                        "NSURL",
-                        "fileURLWithPath:",
-                        file.path
-                    )
-
-                    val image = macClient.sendProxy("NSImage", "alloc")
-                    image.send("initWithContentsOfURL:", url)
-
-                    var array = macClient.sendProxy("NSArray", "array")
-                    array = array.sendProxy("arrayByAddingObject:", image)
-
-                    val pasteboard = macClient.sendProxy(
-                        "NSPasteboard",
-                        "generalPasteboard"
-                    )
-
-                    pasteboard.send("clearContents")
-                    pasteboard.sendBoolean("writeObjects:", array)
-
-                    mc.execute {
-                        sendChatMessage(message, showMessage)
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-            return
-        }
 
         Util.ioPool().execute {
             try {

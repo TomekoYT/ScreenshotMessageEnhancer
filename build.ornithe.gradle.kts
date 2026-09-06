@@ -18,8 +18,6 @@ val lenisVersion = project.property("lenis_version") as String
 
 val oneconfigVersion = project.property("oneconfig_version") as String
 
-val javaObjectiveCBridgeVersion = project.property("java_objective_c_bridge_version") as String
-
 repositories {
     mavenCentral()
     google()
@@ -59,8 +57,6 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
 
     modImplementation("org.polyfrost.oneconfig:$minecraftVersion-ornithe:$oneconfigVersion")
-
-    modImplementation("ca.weblite:java-objc-bridge:${javaObjectiveCBridgeVersion}")
 }
 
 bloom {

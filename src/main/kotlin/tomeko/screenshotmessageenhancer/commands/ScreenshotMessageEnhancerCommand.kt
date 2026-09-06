@@ -13,7 +13,6 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal
 /*import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal
 *///?}
 import net.minecraft.client.Minecraft
-import org.polyfrost.oneconfig.internal.legacy.command.FabricClientCommandSource
 import tomeko.screenshotmessageenhancer.config.ScreenshotMessageEnhancerConfig
 import tomeko.screenshotmessageenhancer.utils.Constants
 

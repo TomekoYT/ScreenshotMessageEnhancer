@@ -16,8 +16,6 @@ val fabricLanguageKotlinVersion = project.property("fabric_language_kotlin_versi
 val oneconfigVersion = project.property("oneconfig_version") as String
 val modMenuVersion = project.property("mod_menu_version") as String
 
-val javaObjectiveCBridgeVersion = project.property("java_objective_c_bridge_version") as String
-
 repositories {
     mavenCentral()
     google()
@@ -52,8 +50,6 @@ dependencies {
 
     implementation("org.polyfrost.oneconfig:$minecraftVersion-fabric:$oneconfigVersion")
     implementation("com.terraformersmc:modmenu:$modMenuVersion")
-
-    implementation("ca.weblite:java-objc-bridge:${javaObjectiveCBridgeVersion}")
 }
 
 bloom {
