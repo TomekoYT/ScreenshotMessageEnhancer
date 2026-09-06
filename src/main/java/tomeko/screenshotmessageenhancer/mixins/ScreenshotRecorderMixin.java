@@ -14,7 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Util;
 //?} else {
 /*import net.minecraft.Util;
-*///?}
+ *///?}
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -89,10 +89,6 @@ public class ScreenshotRecorderMixin {
             Util.ioPool().execute(() -> {
                 try {
                     nativeImage.writeToFile(finalFile);
-
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getCompressScreenshots()) {
-                        ScreenshotCompressor.INSTANCE.compress(finalFile);
-                    }
 
                     ScreenshotManager.INSTANCE.getScreenshotFiles().add(finalFile);
                     int currentIdx = ScreenshotManager.INSTANCE.getScreenshotFiles().size() - 1;
@@ -256,6 +252,10 @@ public class ScreenshotRecorderMixin {
                     }
 
                     callback.accept(message);
+
+                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getCompressScreenshots()) {
+                        Util.nonCriticalIoPool().execute(() -> ScreenshotCompressor.INSTANCE.compress(finalFile));
+                    }
 
                 } catch (Exception e) {
                     callback.accept(Component.literal("Failed to save screenshot: " + e.getMessage()).withStyle(ChatFormatting.RED));

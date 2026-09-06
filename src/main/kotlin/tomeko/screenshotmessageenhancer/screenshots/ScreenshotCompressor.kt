@@ -3,6 +3,8 @@ package tomeko.screenshotmessageenhancer.screenshots
 import tomeko.screenshotmessageenhancer.utils.Debug
 import java.io.File
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import javax.imageio.IIOImage
 import javax.imageio.ImageIO
 import javax.imageio.ImageWriteParam
@@ -35,7 +37,7 @@ object ScreenshotCompressor {
 
                 if (writeParam.canWriteCompressed()) {
                     writeParam.compressionMode = ImageWriteParam.MODE_EXPLICIT
-                    writeParam.compressionQuality = 0.0f
+                    writeParam.compressionQuality = 0.4f
                 }
 
                 FileImageOutputStream(tempFile).use { output ->
@@ -44,18 +46,23 @@ object ScreenshotCompressor {
                 }
 
                 val compressedSize = tempFile.length()
-
                 if (compressedSize in 1 until originalSize) {
-                    if (file.delete() && tempFile.renameTo(file)) {
+                    try {
+                        Files.move(
+                            tempFile.toPath(),
+                            file.toPath(),
+                            StandardCopyOption.REPLACE_EXISTING,
+                            StandardCopyOption.ATOMIC_MOVE
+                        )
                         val savedPercent = ((originalSize - compressedSize) * 100 / originalSize)
                         Debug.log("Compressed ${file.name}: $originalSize -> $compressedSize bytes (-$savedPercent%)")
-                    } else {
+                    } catch (e: IOException) {
+                        Debug.log("Compression skipped, couldn't replace ${file.name}: ${e.message}")
                         tempFile.delete()
-                        Debug.log("Compression skipped, couldn't replace ${file.name}")
                     }
                 } else {
-                    tempFile.delete()
                     Debug.log("Compression skipped, no size reduction for ${file.name}")
+                    tempFile.delete()
                 }
             } finally {
                 writer.dispose()
