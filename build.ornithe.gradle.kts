@@ -11,15 +11,12 @@ val javaVersion = project.property("java_version") as String
 val minecraftVersion = project.property("minecraft_version") as String
 
 val fabricLoaderVersion = project.property("fabric_loader_version") as String
-val fabricApiVersion = project.property("fabric_api_version") as String
-val fabricLanguageKotlinVersion = project.property("fabric_language_kotlin_version") as String
 
 val featherVersion = project.property("feather_version") as String
 val oslVersion = project.property("osl_version") as String
 val lenisVersion = project.property("lenis_version") as String
 
 val oneconfigVersion = project.property("oneconfig_version") as String
-val modMenuVersion = project.property("mod_menu_version") as String
 
 val javaObjectiveCBridgeVersion = project.property("java_objective_c_bridge_version") as String
 
@@ -56,7 +53,7 @@ loom {
 dependencies {
     implementation(kotlin("stdlib"))
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(ploceus.featherMappings(featherVersion))
+    mappings(ploceus.mcpMappings("stable", "1.8.9", "22"))
     ploceus.dependOsl(oslVersion)
     modImplementation("pl.tomgirl:lenis:${lenisVersion}")
     modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
@@ -84,11 +81,8 @@ tasks.processResources {
         "java_version" to javaVersion,
         "minecraft_version" to minecraftVersion,
         "fabric_loader_version" to fabricLoaderVersion,
-        "fabric_api_version" to fabricApiVersion,
-        "fabric_language_kotlin_version" to fabricLanguageKotlinVersion,
 
         "oneconfig_version" to oneconfigVersion,
-        "mod_menu_version" to modMenuVersion
     )
 
     inputs.properties(props)

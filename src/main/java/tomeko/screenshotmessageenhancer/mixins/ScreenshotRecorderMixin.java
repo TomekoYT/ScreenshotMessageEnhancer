@@ -1,7 +1,7 @@
 package tomeko.screenshotmessageenhancer.mixins;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
-//? if = 1.21.1-fabric {
+//? if = 1.21.1 {
 //import com.mojang.blaze3d.platform.NativeImage;
 //?}
 import net.minecraft.ChatFormatting;
@@ -10,7 +10,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-//? if >= 1.21.11-fabric {
+//? if >= 1.21.11 {
 import net.minecraft.util.Util;
 //?} else {
 /*import net.minecraft.Util;
@@ -32,11 +32,11 @@ import java.util.function.Consumer;
 public class ScreenshotRecorderMixin {
     @Inject(
             method =
-                    //? if >= 1.21.11-fabric {
+                    //? if >= 1.21.11 {
                     "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V",
             //?} else {
-            //"grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;Ljava/util/function/Consumer;)V",
-            //?}
+            /*"grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;Ljava/util/function/Consumer;)V",
+            *///?}
             at = @At("HEAD"),
             cancellable = true
     )
@@ -44,7 +44,7 @@ public class ScreenshotRecorderMixin {
             File workDir,
             String forceName,
             RenderTarget target,
-            //? if >= 1.21.11-fabric {
+            //? if >= 1.21.11 {
             int downscaleFactor,
             //?}
             Consumer<Component> callback,
@@ -52,7 +52,7 @@ public class ScreenshotRecorderMixin {
     ) {
         ci.cancel();
 
-        //? if >= 1.21.11-fabric {
+        //? if >= 1.21.11 {
         Screenshot.takeScreenshot(target, (nativeImage) -> {
             //?} else {
             /*NativeImage nativeImage = Screenshot.takeScreenshot(target);
@@ -106,7 +106,7 @@ public class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.COPY.ordinal()]) {
                         String command =
-                                //? if = 1.21.1-fabric {
+                                //? if = 1.21.1 {
                                 /*"/" +
                                  *///?}
                                 Constants.SCREENSHOT_COPY_COMMAND + " " + currentIdx;
@@ -118,14 +118,14 @@ public class ScreenshotRecorderMixin {
                                         .withStyle(ChatFormatting.BOLD, ChatFormatting.BLUE)
                                         .withStyle(style -> style
                                                 .withClickEvent(
-                                                        //? if >= 1.21.11-fabric {
+                                                        //? if >= 1.21.11 {
                                                         new ClickEvent.RunCommand(command)
                                                         //?} else {
                                                         /*new ClickEvent(ClickEvent.Action.RUN_COMMAND, command)
                                                          *///?}
                                                 )
                                                 .withHoverEvent(
-                                                        //? if >= 1.21.11-fabric {
+                                                        //? if >= 1.21.11 {
                                                         new HoverEvent.ShowText(text)
                                                         //?} else {
                                                         /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, text)
@@ -145,14 +145,14 @@ public class ScreenshotRecorderMixin {
                                         .withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN)
                                         .withStyle(style -> style
                                                 .withClickEvent(
-                                                        //? if >= 1.21.11-fabric {
+                                                        //? if >= 1.21.11 {
                                                         new ClickEvent.OpenFile(path)
                                                         //?} else {
                                                         /*new ClickEvent(ClickEvent.Action.OPEN_FILE, path)
                                                          *///?}
                                                 )
                                                 .withHoverEvent(
-                                                        //? if >= 1.21.11-fabric {
+                                                        //? if >= 1.21.11 {
                                                         new HoverEvent.ShowText(text)
                                                         //?} else {
                                                         /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, text)
@@ -172,14 +172,14 @@ public class ScreenshotRecorderMixin {
                                         .withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD)
                                         .withStyle(style -> style
                                                 .withClickEvent(
-                                                        //? if >= 1.21.11-fabric {
+                                                        //? if >= 1.21.11 {
                                                         new ClickEvent.OpenFile(path)
                                                         //?} else {
                                                         /*new ClickEvent(ClickEvent.Action.OPEN_FILE, path)
                                                          *///?}
                                                 )
                                                 .withHoverEvent(
-                                                        //? if >= 1.21.11-fabric {
+                                                        //? if >= 1.21.11 {
                                                         new HoverEvent.ShowText(text)
                                                         //?} else {
                                                         /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, text)
@@ -191,7 +191,7 @@ public class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.DELETE.ordinal()]) {
                         String command =
-                                //? if = 1.21.1-fabric {
+                                //? if = 1.21.1 {
                                 /*"/" +
                                  *///?}
                                 Constants.SCREENSHOT_DELETE_COMMAND + " " + currentIdx;
@@ -203,14 +203,14 @@ public class ScreenshotRecorderMixin {
                                         .withStyle(ChatFormatting.BOLD, ChatFormatting.RED)
                                         .withStyle(style -> style
                                                 .withClickEvent(
-                                                        //? if >= 1.21.11-fabric {
+                                                        //? if >= 1.21.11 {
                                                         new ClickEvent.RunCommand(command)
                                                         //?} else {
                                                         /*new ClickEvent(ClickEvent.Action.RUN_COMMAND, command)
                                                          *///?}
                                                 )
                                                 .withHoverEvent(
-                                                        //? if >= 1.21.11-fabric {
+                                                        //? if >= 1.21.11 {
                                                         new HoverEvent.ShowText(text)
                                                         //?} else {
                                                         /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, text)
@@ -222,7 +222,7 @@ public class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getButtons()[Buttons.UPLOAD.ordinal()]) {
                         String command =
-                                //? if = 1.21.1-fabric {
+                                //? if = 1.21.1 {
                                 /*"/" +
                                  *///?}
                                 Constants.SCREENSHOT_UPLOAD_COMMAND + " " + currentIdx;
@@ -234,14 +234,14 @@ public class ScreenshotRecorderMixin {
                                         .withStyle(ChatFormatting.BOLD, ChatFormatting.YELLOW)
                                         .withStyle(style -> style
                                                 .withClickEvent(
-                                                        //? if >= 1.21.11-fabric {
+                                                        //? if >= 1.21.11 {
                                                         new ClickEvent.RunCommand(command)
                                                         //?} else {
                                                         /*new ClickEvent(ClickEvent.Action.RUN_COMMAND, command)
                                                          *///?}
                                                 )
                                                 .withHoverEvent(
-                                                        //? if >= 1.21.11-fabric {
+                                                        //? if >= 1.21.11 {
                                                         new HoverEvent.ShowText(text)
                                                         //?} else {
                                                         /*new HoverEvent(HoverEvent.Action.SHOW_TEXT, text)
@@ -263,7 +263,7 @@ public class ScreenshotRecorderMixin {
                     nativeImage.close();
                 }
             });
-            //? if >= 1.21.11-fabric {
+            //? if >= 1.21.11 {
         });
         //?}
     }

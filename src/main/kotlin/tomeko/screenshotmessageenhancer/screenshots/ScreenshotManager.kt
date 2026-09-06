@@ -4,7 +4,7 @@ import ca.weblite.objc.Client
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-//? if >= 1.21.11-fabric {
+//? if >= 1.21.11 {
 import net.minecraft.util.Util
 //?} else {
 /*import net.minecraft.Util
@@ -19,7 +19,12 @@ import javax.imageio.ImageIO
 object ScreenshotManager {
     val screenshotFiles: ArrayList<File> = ArrayList()
 
-    private val client: Minecraft = Minecraft.getInstance()
+    private val mc: Minecraft =
+        //? if = 1.8.9 {
+        /*Minecraft.getMinecraft()
+        *///?} else {
+        Minecraft.getInstance()
+    //?}
 
     fun copyScreenshot(pos: Int, showMessage: Boolean) {
         if (pos >= screenshotFiles.size) return
@@ -54,7 +59,7 @@ object ScreenshotManager {
                     pasteboard.send("clearContents")
                     pasteboard.sendBoolean("writeObjects:", array)
 
-                    client.execute {
+                    mc.execute {
                         sendChatMessage(message, showMessage)
                     }
                 } catch (e: Exception) {
@@ -75,7 +80,7 @@ object ScreenshotManager {
                         .systemClipboard
                         .setContents(content, null)
 
-                    client.execute {
+                    mc.execute {
                         sendChatMessage(message, showMessage)
                     }
                 }
@@ -86,7 +91,7 @@ object ScreenshotManager {
                     style.withColor(ChatFormatting.RED)
                 }
 
-                client.execute {
+                mc.execute {
                     sendChatMessage(errorMessage, showMessage)
                 }
 
@@ -107,7 +112,7 @@ object ScreenshotManager {
                         style.withColor(ChatFormatting.RED)
                     }
 
-                client.execute {
+                mc.execute {
                     sendChatMessage(message, true)
                 }
             } else {
@@ -117,7 +122,7 @@ object ScreenshotManager {
                     style.withColor(ChatFormatting.GOLD)
                 }
 
-                client.execute {
+                mc.execute {
                     sendChatMessage(errorMessage, true)
                 }
             }
@@ -138,9 +143,9 @@ object ScreenshotManager {
                 val messageComponent = Component.literal("Screenshot uploaded + link copied to clipboard!")
                     .withStyle(ChatFormatting.YELLOW)
 
-                client.keyboardHandler.clipboard = url
+                mc.keyboardHandler.clipboard = url
 
-                client.execute {
+                mc.execute {
                     sendChatMessage(messageComponent, true)
                 }
             }.exceptionally { error ->
@@ -151,14 +156,14 @@ object ScreenshotManager {
     }
 
     private fun sendChatMessage(message: Component, showMessage: Boolean) {
-        if (!showMessage || client.player == null) return
+        if (!showMessage || mc.player == null) return
 
-        //? if >= 26.2-fabric {
-        /*client.gui.hud.chat.addClientSystemMessage(message)
-        *///?} else if >= 26.1-fabric {
-        client.gui.chat.addClientSystemMessage(message)
+        //? if >= 26.2 {
+        /*mc.gui.hud.chat.addClientSystemMessage(message)
+        *///?} else if >= 26.1 {
+        mc.gui.chat.addClientSystemMessage(message)
         //?} else {
-        /*client.gui.chat.addMessage(message)
+        /*mc.gui.chat.addMessage(message)
         *///?}
     }
 }

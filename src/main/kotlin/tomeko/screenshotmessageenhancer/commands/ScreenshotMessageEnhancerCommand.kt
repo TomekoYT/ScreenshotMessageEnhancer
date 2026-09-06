@@ -7,12 +7,13 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.CommandBuildContext
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import org.polyfrost.oneconfig.utils.v1.dsl.openUI
-//? if >= 26.1-fabric {
+//? if >= 26.1 {
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal
 //?} else {
 /*import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal
 *///?}
 import net.minecraft.client.Minecraft
+import org.polyfrost.oneconfig.internal.legacy.command.FabricClientCommandSource
 import tomeko.screenshotmessageenhancer.config.ScreenshotMessageEnhancerConfig
 import tomeko.screenshotmessageenhancer.utils.Constants
 
