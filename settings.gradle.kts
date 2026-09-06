@@ -18,6 +18,9 @@ pluginManagement {
         maven("https://repo.spongepowered.org/maven/")
         maven("https://repo.essential.gg/repository/maven-public")
 
+        maven("https://repo.polyfrost.org/releases")
+        maven("https://repo.polyfrost.org/snapshots")
+
         maven("https://maven.deftu.dev/releases")
         maven("https://maven.deftu.dev/snapshots")
     }
@@ -36,6 +39,7 @@ plugins {
 
 stonecutter {
     create(rootProject) {
+        version("1.8.9-ornithe").buildscript("build.ornithe.gradle.kts")
         versions("1.21.1-fabric", "1.21.11-fabric").buildscript("build.obfuscated.gradle.kts")
         versions("26.1-fabric", "26.2-fabric")
         vcsVersion = "26.1-fabric"
