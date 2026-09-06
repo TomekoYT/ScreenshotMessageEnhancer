@@ -57,6 +57,13 @@ object ScreenshotMessageEnhancerConfig : Config(
     )
     var autoCopyScreenshot = false
 
+    @Switch(
+        title = "Compress Screenshots",
+        description = "Compress Screenshots without any quality loss",
+        category = CATEGORY_GENERAL
+    )
+    var compressScreenshots = true
+
 
     private const val CATEGORY_DEBUG = "Debug"
 
