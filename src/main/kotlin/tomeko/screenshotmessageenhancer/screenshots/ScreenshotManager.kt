@@ -31,11 +31,12 @@ object ScreenshotManager {
     val screenshotFiles: ArrayList<File> = ArrayList()
 
     private val mc: Minecraft =
-        //? if = 1.8.9 {
-        //Minecraft.getMinecraft()
+    //? if = 1.8.9 {
+    //Minecraft.getMinecraft()
 
-    //?} else {
-    Minecraft.getInstance()
+        //?} else {
+        Minecraft.getInstance()
+
     //?}
     fun copyScreenshot(pos: Int, showMessage: Boolean) {
         if (pos >= screenshotFiles.size) return
@@ -45,8 +46,8 @@ object ScreenshotManager {
 
         //? if 1.8.9 {
         //threadExecutor.execute {
-            //?} else {
-            Util.ioPool().execute {
+        //?} else {
+        Util.ioPool().execute {
             //?}
             try {
                 val image: BufferedImage? = ImageIO.read(file)
@@ -58,8 +59,8 @@ object ScreenshotManager {
 
                     //? if 1.8.9 {
                     //mc.addScheduledTask {
-                        //?} else {
-                        mc.execute {
+                    //?} else {
+                    mc.execute {
                         //?}
                         sendChatMessage(
                             getStyledChatMessage(
@@ -77,8 +78,8 @@ object ScreenshotManager {
             } catch (e: Exception) {
                 //? if 1.8.9 {
                 //mc.addScheduledTask {
-                    //?} else {
-                    mc.execute {
+                //?} else {
+                mc.execute {
                     //?}
                     sendChatMessage(
                         getStyledChatMessage(
@@ -103,16 +104,16 @@ object ScreenshotManager {
 
         //? if 1.8.9 {
         //threadExecutor.execute {
-            //?} else {
-            Util.ioPool().execute {
+        //?} else {
+        Util.ioPool().execute {
             //?}
             val file = screenshotFiles[pos]
 
             if (file.exists() && file.delete()) {
                 //? if 1.8.9 {
                 //mc.addScheduledTask {
-                    //?} else {
-                    mc.execute {
+                //?} else {
+                mc.execute {
                     //?}
                     sendChatMessage(
                         getStyledChatMessage(
@@ -129,8 +130,8 @@ object ScreenshotManager {
             } else {
                 //? if 1.8.9 {
                 //mc.addScheduledTask {
-                    //?} else {
-                    mc.execute {
+                //?} else {
+                mc.execute {
                     //?}
                     sendChatMessage(
                         getStyledChatMessage(
@@ -201,8 +202,8 @@ object ScreenshotManager {
 
         //? if 1.8.9 {
         //threadExecutor.execute {
-            //?} else {
-            Util.ioPool().execute {
+        //?} else {
+        Util.ioPool().execute {
             //?}
             try {
                 ScreenshotUploader.upload(file).thenAccept { url ->
@@ -214,8 +215,8 @@ object ScreenshotManager {
 
                     //? if 1.8.9 {
                     //mc.addScheduledTask {
-                        //?} else {
-                        mc.execute {
+                    //?} else {
+                    mc.execute {
                         //?}
                         sendChatMessage(
                             getStyledChatMessage(
@@ -236,8 +237,8 @@ object ScreenshotManager {
             } catch (_: Exception) {
                 //? if 1.8.9 {
                 //mc.addScheduledTask {
-                    //?} else {
-                    mc.execute {
+                //?} else {
+                mc.execute {
                     //?}
                     sendChatMessage(
                         getStyledChatMessage(
