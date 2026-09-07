@@ -29,6 +29,7 @@ import net.minecraft.util.Util;
 //import net.minecraft.Util;
 //?}
 //?}
+import org.lwjgl.opengl.GL12;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -123,9 +124,9 @@ public abstract class ScreenshotRecorderMixin {
 
         if (OpenGlHelper.isFramebufferEnabled()) {
             GlStateManager.bindTexture(buffer.framebufferTexture);
-            GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, screenshotmessageenhancer$pixelBuffer);
+            GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, screenshotmessageenhancer$pixelBuffer);
         } else {
-            GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, screenshotmessageenhancer$pixelBuffer);
+            GL11.glReadPixels(0, 0, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, screenshotmessageenhancer$pixelBuffer);
         }
 
         screenshotmessageenhancer$pixelBuffer.get(screenshotmessageenhancer$pixelValues);
