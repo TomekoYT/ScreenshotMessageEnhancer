@@ -47,6 +47,10 @@ class ScreenshotMessageEnhancer
         ScreenshotMessageEnhancerCommand.register()
         SMEScreenshotCopyCommand.register()
         SMEScreenshotDeleteCommand.register()
+        //? if 1.8.9 {
+        /*SMEScreenshotOpenCommand.register()
+        SMEScreenshotOpenFolderCommand.register()
+        *///?}
         SMEScreenshotUploadCommand.register()
 
         ScreenshotMessageEnhancerConfig.register()
