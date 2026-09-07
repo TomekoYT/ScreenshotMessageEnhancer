@@ -11,7 +11,7 @@ import javax.imageio.ImageWriteParam
 import javax.imageio.stream.FileImageOutputStream
 
 object ScreenshotCompressor {
-    fun compress(file: File) {
+    fun compress(file: File, pos: Int) {
         if (!file.exists()) return
 
         val originalSize = file.length()
@@ -54,6 +54,7 @@ object ScreenshotCompressor {
                             StandardCopyOption.REPLACE_EXISTING,
                             StandardCopyOption.ATOMIC_MOVE
                         )
+                        tempFile.copyTo(ScreenshotManager.screenshotFiles[pos])
                         val savedPercent = ((originalSize - compressedSize) * 100 / originalSize)
                         Debug.log("Compressed ${file.name}: $originalSize -> $compressedSize bytes (-$savedPercent%)")
                     } catch (e: IOException) {

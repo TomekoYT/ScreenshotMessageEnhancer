@@ -13,7 +13,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 *///?} else {
-
 import com.mojang.blaze3d.pipeline.RenderTarget;
 //? if = 1.21.1 {
 //import com.mojang.blaze3d.platform.NativeImage;
@@ -491,7 +490,7 @@ public abstract class ScreenshotRecorderMixin {
                     //?}
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getCompressScreenshots()) {
-                        ScreenshotCompressor.INSTANCE.compress(finalFile);
+                        ScreenshotCompressor.INSTANCE.compress(finalFile, currentIdx);
                     }
 
                 } catch (Exception e) {

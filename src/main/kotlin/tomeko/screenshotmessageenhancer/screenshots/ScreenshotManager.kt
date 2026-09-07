@@ -33,10 +33,8 @@ object ScreenshotManager {
     private val mc: Minecraft =
     //? if = 1.8.9 {
     //Minecraft.getMinecraft()
-
         //?} else {
         Minecraft.getInstance()
-
     //?}
     fun copyScreenshot(pos: Int, showMessage: Boolean) {
         if (pos >= screenshotFiles.size) return
