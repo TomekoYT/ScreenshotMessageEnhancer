@@ -1,7 +1,8 @@
 package tomeko.screenshotmessageenhancer.mixins;
 
 //? if 1.8.9 {
-/*import net.minecraft.client.Minecraft;
+/*
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -72,8 +73,8 @@ public abstract class ScreenshotRecorderMixin {
             method =
                     //? if 1.8.9 {
                     //"saveScreenshot(Ljava/io/File;Ljava/lang/String;IILnet/minecraft/client/shader/Framebuffer;)Lnet/minecraft/util/IChatComponent;",
-                    //?} elif >= 1.21.11 {
-                    "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V",
+            //?} elif >= 1.21.11 {
+            "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V",
             //?} else {
             //"grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;Ljava/util/function/Consumer;)V",
             //?}
@@ -147,91 +148,89 @@ public abstract class ScreenshotRecorderMixin {
         }
         *///?} elif >= 1.21.11 {
         Screenshot.takeScreenshot(target, (nativeImage) -> {
-            //?} elif fabric {
-            //NativeImage nativeImage = Screenshot.takeScreenshot(target);
-            //?}
+        //?} elif fabric {
+        //NativeImage nativeImage = Screenshot.takeScreenshot(target);
+        //?}
 
-            File screenshotsFolder = new File(workDir, "screenshots");
+        File screenshotsFolder = new File(workDir, "screenshots");
 
-            if (!screenshotsFolder.exists()) {
-                screenshotsFolder.mkdirs();
-            }
+        if (!screenshotsFolder.exists()) {
+            screenshotsFolder.mkdirs();
+        }
 
-            File screenshotFile;
+        File screenshotFile;
 
-            if (forceName == null) {
-                screenshotFile = screenshotmessageenhancer$getScreenshotFilename(screenshotsFolder);
-            } else {
-                screenshotFile = new File(screenshotsFolder, forceName);
-            }
+        if (forceName == null) {
+            screenshotFile = screenshotmessageenhancer$getScreenshotFilename(screenshotsFolder);
+        } else {
+            screenshotFile = new File(screenshotsFolder, forceName);
+        }
 
-            File accessibleScreenshotFile;
-            File accessibleScreenshotsFolder;
+        File accessibleScreenshotFile;
+        File accessibleScreenshotsFolder;
 
-            try {
-                accessibleScreenshotFile = screenshotFile.getCanonicalFile();
-                accessibleScreenshotsFolder = screenshotsFolder.getCanonicalFile();
-            } catch (Exception e) {
-                accessibleScreenshotFile = screenshotFile.getAbsoluteFile();
-                accessibleScreenshotsFolder = screenshotsFolder.getAbsoluteFile();
-            }
+        try {
+            accessibleScreenshotFile = screenshotFile.getCanonicalFile();
+            accessibleScreenshotsFolder = screenshotsFolder.getCanonicalFile();
+        } catch (Exception e) {
+            accessibleScreenshotFile = screenshotFile.getAbsoluteFile();
+            accessibleScreenshotsFolder = screenshotsFolder.getAbsoluteFile();
+        }
 
-            File finalFile = accessibleScreenshotFile;
-            File finalFolder = accessibleScreenshotsFolder;
-            //? if 1.8.9 {
-            //Minecraft.getMinecraft().addScheduledTask(() -> {
-            //?} else {
+        File finalFile = accessibleScreenshotFile;
+        File finalFolder = accessibleScreenshotsFolder;
+            //? if fabric {
             Util.ioPool().execute(() -> {
+            //?}
+            try {
+                //? if 1.8.9 {
+                //ImageIO.write(nativeImage, "png", finalFile);
+                //?} else {
+                nativeImage.writeToFile(finalFile);
                 //?}
-                try {
+
+                ScreenshotManager.INSTANCE.getScreenshotFiles().add(finalFile);
+                int currentIdx = ScreenshotManager.INSTANCE.getScreenshotFiles().size() - 1;
+
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getAutoCopyScreenshot()) {
+                    ScreenshotManager.INSTANCE.copyScreenshot(currentIdx, false);
+                }
+
+                //? if 1.8.9 {
+                //ChatComponentText message = new ChatComponentText("Saved screenshot");
+                //?} else {
+                MutableComponent message = Component.literal("Saved screenshot");
+                //?}
+
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowName()) {
                     //? if 1.8.9 {
-                    //ImageIO.write(nativeImage, "png", finalFile);
-                    //?} else {
-                    nativeImage.writeToFile(finalFile);
-                    //?}
-
-                    ScreenshotManager.INSTANCE.getScreenshotFiles().add(finalFile);
-                    int currentIdx = ScreenshotManager.INSTANCE.getScreenshotFiles().size() - 1;
-
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getAutoCopyScreenshot()) {
-                        ScreenshotManager.INSTANCE.copyScreenshot(currentIdx, false);
-                    }
-
-                    //? if 1.8.9 {
-                    //ChatComponentText message = new ChatComponentText("Saved screenshot");
-                    //?} else {
-                    MutableComponent message = Component.literal("Saved screenshot");
-                    //?}
-
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowName()) {
-                        //? if 1.8.9 {
                     /*message.appendText(" as ");
                     message.appendSibling(new ChatComponentText(finalFile.getName()).setChatStyle(new ChatStyle().setUnderlined(true)));
                     *///?} else {
                         message.append(Component.literal(" as "));
                         message.append(Component.literal(finalFile.getName()).withStyle(ChatFormatting.UNDERLINE));
                         //?}
-                    }
+                }
 
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowCopyButton()) {
-                        String command =
-                                //? if = 1.21.1 {
-                                //"/" +
-                                //?}
-                                Constants.SCREENSHOT_COPY_COMMAND + " " + currentIdx;
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowCopyButton()) {
+                    String command =
+                            //? if = 1.21.1 {
+                            //"/" +
+                            //?}
+                            Constants.SCREENSHOT_COPY_COMMAND + " " + currentIdx;
 
-                        //? if 1.8.9 {
-                        //ChatComponentText text = new ChatComponentText("Copy the screenshot");
-                        //?} else {
-                        Component text = Component.literal("Copy the screenshot");
-                        //?}
+                    //? if 1.8.9 {
+                    //ChatComponentText text = new ChatComponentText("Copy the screenshot");
+                    //?} else {
+                    Component text = Component.literal("Copy the screenshot");
+                    //?}
 
-                        //? if 1.8.9 {
-                        //message.appendText(" ");
-                        //?} else {
-                        message.append(" ");
-                        //?}
-                        //? if 1.8.9 {
+                    //? if 1.8.9 {
+                    //message.appendText(" ");
+                    //?} else {
+                    message.append(" ");
+                    //?}
+                    //? if 1.8.9 {
                     /*message.appendSibling(
                             new ChatComponentText("[COPY]").setChatStyle(
                                     new ChatStyle()
@@ -262,23 +261,23 @@ public abstract class ScreenshotRecorderMixin {
                                         )
                         );
                         //?}
-                    }
+                }
 
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowOpenButton()) {
-                        String path = finalFile.getAbsolutePath();
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowOpenButton()) {
+                    String path = finalFile.getAbsolutePath();
 
-                        //? if 1.8.9 {
-                        //ChatComponentText text = new ChatComponentText("Open " + finalFile.getName());
-                        //?} else {
-                        Component text = Component.literal("Open " + finalFile.getName());
-                        //?}
+                    //? if 1.8.9 {
+                    //ChatComponentText text = new ChatComponentText("Open " + finalFile.getName());
+                    //?} else {
+                    Component text = Component.literal("Open " + finalFile.getName());
+                    //?}
 
-                        //? if 1.8.9 {
-                        //message.appendText(" ");
-                        //?} else {
-                        message.append(" ");
-                        //?}
-                        //? if 1.8.9 {
+                    //? if 1.8.9 {
+                    //message.appendText(" ");
+                    //?} else {
+                    message.append(" ");
+                    //?}
+                    //? if 1.8.9 {
                     /*message.appendSibling(
                             new ChatComponentText("[OPEN]").setChatStyle(
                                     new ChatStyle()
@@ -309,23 +308,23 @@ public abstract class ScreenshotRecorderMixin {
                                         )
                         );
                         //?}
-                    }
+                }
 
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowOpenFolderButton()) {
-                        String path = finalFolder.getAbsolutePath();
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowOpenFolderButton()) {
+                    String path = finalFolder.getAbsolutePath();
 
-                        //? if 1.8.9 {
-                        //ChatComponentText text = new ChatComponentText(finalFolder.getPath());
-                        //?} else {
-                        Component text = Component.literal(finalFolder.getPath());
-                        //?}
+                    //? if 1.8.9 {
+                    //ChatComponentText text = new ChatComponentText(finalFolder.getPath());
+                    //?} else {
+                    Component text = Component.literal(finalFolder.getPath());
+                    //?}
 
-                        //? if 1.8.9 {
-                        //message.appendText(" ");
-                        //?} else {
-                        message.append(" ");
-                        //?}
-                        //? if 1.8.9 {
+                    //? if 1.8.9 {
+                    //message.appendText(" ");
+                    //?} else {
+                    message.append(" ");
+                    //?}
+                    //? if 1.8.9 {
                     /*message.appendSibling(
                             new ChatComponentText("[OPEN FOLDER]").setChatStyle(
                                     new ChatStyle()
@@ -356,27 +355,27 @@ public abstract class ScreenshotRecorderMixin {
                                         )
                         );
                         //?}
-                    }
+                }
 
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowDeleteButton()) {
-                        String command =
-                                //? if = 1.21.1 {
-                                //"/" +
-                                //?}
-                                Constants.SCREENSHOT_DELETE_COMMAND + " " + currentIdx;
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowDeleteButton()) {
+                    String command =
+                            //? if = 1.21.1 {
+                            //"/" +
+                            //?}
+                            Constants.SCREENSHOT_DELETE_COMMAND + " " + currentIdx;
 
-                        //? if 1.8.9 {
-                        //ChatComponentText text = new ChatComponentText("Delete the screenshot");
-                        //?} else {
-                        Component text = Component.literal("Delete the screenshot");
-                        //?}
+                    //? if 1.8.9 {
+                    //ChatComponentText text = new ChatComponentText("Delete the screenshot");
+                    //?} else {
+                    Component text = Component.literal("Delete the screenshot");
+                    //?}
 
-                        //? if 1.8.9 {
-                        //message.appendText(" ");
-                        //?} else {
-                        message.append(" ");
-                        //?}
-                        //? if 1.8.9 {
+                    //? if 1.8.9 {
+                    //message.appendText(" ");
+                    //?} else {
+                    message.append(" ");
+                    //?}
+                    //? if 1.8.9 {
                     /*message.appendSibling(
                             new ChatComponentText("[DELETE]").setChatStyle(
                                     new ChatStyle()
@@ -407,27 +406,27 @@ public abstract class ScreenshotRecorderMixin {
                                         )
                         );
                         //?}
-                    }
+                }
 
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowUploadButton()) {
-                        String command =
-                                //? if = 1.21.1 {
-                                //"/" +
-                                //?}
-                                Constants.SCREENSHOT_UPLOAD_COMMAND + " " + currentIdx;
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowUploadButton()) {
+                    String command =
+                            //? if = 1.21.1 {
+                            //"/" +
+                            //?}
+                            Constants.SCREENSHOT_UPLOAD_COMMAND + " " + currentIdx;
 
-                        //? if 1.8.9 {
-                        //ChatComponentText text = new ChatComponentText("Upload the screenshot");
-                        //?} else {
-                        Component text = Component.literal("Upload the screenshot");
-                        //?}
+                    //? if 1.8.9 {
+                    //ChatComponentText text = new ChatComponentText("Upload the screenshot");
+                    //?} else {
+                    Component text = Component.literal("Upload the screenshot");
+                    //?}
 
-                        //? if 1.8.9 {
-                        //message.appendText(" ");
-                        //?} else {
-                        message.append(" ");
-                        //?}
-                        //? if 1.8.9 {
+                    //? if 1.8.9 {
+                    //message.appendText(" ");
+                    //?} else {
+                    message.append(" ");
+                    //?}
+                    //? if 1.8.9 {
                     /*message.appendSibling(
                             new ChatComponentText("[UPLOAD]").setChatStyle(
                                     new ChatStyle()
@@ -458,40 +457,36 @@ public abstract class ScreenshotRecorderMixin {
                                         )
                         );
                         //?}
-                    }
-
-                    //? if 1.8.9 {
-                    //cir.setReturnValue(
-                    //?} else {
-                    callback.accept(
-                            //?}
-                            message
-                    );
-
-                    if (ScreenshotMessageEnhancerConfig.INSTANCE.getCompressScreenshots()) {
-                        ScreenshotCompressor.INSTANCE.compress(finalFile);
-                    }
-
-                } catch (Exception e) {
-                    //? if 1.8.9 {
-                    //cir.setReturnValue(
-                    //?} else {
-                    callback.accept(
-                            //?}
-                            //? if 1.8.9 {
-                            //new ChatComponentText("Failed to save screenshot: " + e.getMessage()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED))
-                            //?} else {
-                            Component.literal("Failed to save screenshot: " + e.getMessage()).withStyle(ChatFormatting.RED)
-                            //?}
-                    );
                 }
-                //? ! 1.8.9 {
+
+                //? if 1.8.9 {
+                //cir.setReturnValue(message);
+                //?} else {
+                callback.accept(message);
+                //?}
+
+                if (ScreenshotMessageEnhancerConfig.INSTANCE.getCompressScreenshots()) {
+                    ScreenshotCompressor.INSTANCE.compress(finalFile);
+                }
+
+            } catch (Exception e) {
+                //? if 1.8.9 {
+                /*cir.setReturnValue(
+                        new ChatComponentText("Failed to save screenshot: " + e.getMessage())
+                                .setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+                *///?} else {
+                callback.accept(Component.literal("Failed to save screenshot: " + e.getMessage()).withStyle(ChatFormatting.RED));
+                //?}
+            }
+            //? fabric {
                 finally {
                     nativeImage.close();
                 }
                 //?}
-            });
-            //? if >= 1.21.11 {
+        //? if fabric {
+        });
+        //?}
+        //? if >= 1.21.11 {
         });
         //?}
     }
@@ -500,8 +495,8 @@ public abstract class ScreenshotRecorderMixin {
         String time =
                 //? if 1.8.9 {
                 //new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date());
-                //?} else {
-                Util.getFilenameFormattedDateTime();
+        //?} else {
+        Util.getFilenameFormattedDateTime();
         //?}
         int i = 1;
 

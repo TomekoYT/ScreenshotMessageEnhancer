@@ -21,9 +21,6 @@ import java.awt.Toolkit
 import java.awt.image.BufferedImage
 import java.io.File
 import java.util.ArrayList
-//? if 1.8.9 {
-//import java.util.concurrent.Executors
-//?}
 import javax.imageio.ImageIO
 
 object ScreenshotManager {
@@ -34,12 +31,7 @@ object ScreenshotManager {
         //Minecraft.getMinecraft()
     //?} else {
     Minecraft.getInstance()
-//?}
-
-    //? if 1.8.9 {
-    //private val ioExecutor = Executors.newCachedThreadPool()
     //?}
-
     fun copyScreenshot(pos: Int, showMessage: Boolean) {
         if (pos >= screenshotFiles.size) return
 
@@ -47,11 +39,10 @@ object ScreenshotManager {
         if (!file.exists()) return
 
         //? if 1.8.9 {
-        //ioExecutor
+        //threadExecutor.execute {
             //?} else {
-            Util.ioPool()
+            Util.ioPool().execute {
             //?}
-            .execute {
                 try {
                     val image: BufferedImage? = ImageIO.read(file)
 
@@ -106,11 +97,10 @@ object ScreenshotManager {
         if (pos >= screenshotFiles.size) return
 
         //? if 1.8.9 {
-        //ioExecutor
+        //threadExecutor.execute {
             //?} else {
-            Util.ioPool()
+            Util.ioPool().execute {
             //?}
-            .execute {
                 val file = screenshotFiles[pos]
 
                 if (file.exists() && file.delete()) {
@@ -172,11 +162,10 @@ object ScreenshotManager {
         )
 
         //? if 1.8.9 {
-        //ioExecutor
+        //threadExecutor.execute {
             //?} else {
-            Util.ioPool()
+            Util.ioPool().execute {
             //?}
-            .execute {
                 try {
                     ScreenshotUploader.upload(file).thenAccept { url ->
                         //? if 1.8.9 {
