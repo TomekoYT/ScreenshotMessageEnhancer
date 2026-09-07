@@ -1,6 +1,6 @@
 package tomeko.screenshotmessageenhancer.config
 
-//? if >= 1.21.1 {
+//? if fabric {
 import com.terraformersmc.modmenu.api.ConfigScreenFactory
 import com.terraformersmc.modmenu.api.ModMenuApi
 import net.minecraft.client.gui.screens.Screen
