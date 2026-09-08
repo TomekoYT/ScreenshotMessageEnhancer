@@ -47,7 +47,7 @@ object ScreenshotMessageEnhancerConfig : Config(
     //? if forge {
     //@Exclude
     //?}
-    private const val SUBCATEGORY_NAME = "Name"
+    private const val SUBCATEGORY_SCREENSHOT_MESSAGE = "Screenshot Message"
 
     @Switch(
         //? if forge {
@@ -58,14 +58,9 @@ object ScreenshotMessageEnhancerConfig : Config(
             "Show Name",
         description = "Show screenshot name in the screenshot message",
         category = CATEGORY_GENERAL,
-        subcategory = SUBCATEGORY_NAME
+        subcategory = SUBCATEGORY_SCREENSHOT_MESSAGE
     )
     var showName = false
-
-    //? if forge {
-    //@Exclude
-    //?}
-    private const val SUBCATEGORY_BUTTONS = "Buttons"
 
     @Switch(
         //? if forge {
@@ -76,7 +71,7 @@ object ScreenshotMessageEnhancerConfig : Config(
             "Show Copy Button",
         description = "Show copy button in the screenshot message",
         category = CATEGORY_GENERAL,
-        subcategory = SUBCATEGORY_BUTTONS
+        subcategory = SUBCATEGORY_SCREENSHOT_MESSAGE
     )
     var showCopyButton = true
 
@@ -89,7 +84,7 @@ object ScreenshotMessageEnhancerConfig : Config(
             "Show Open Button",
         description = "Show open button in the screenshot message",
         category = CATEGORY_GENERAL,
-        subcategory = SUBCATEGORY_BUTTONS
+        subcategory = SUBCATEGORY_SCREENSHOT_MESSAGE
     )
     var showOpenButton = true
 
@@ -102,7 +97,7 @@ object ScreenshotMessageEnhancerConfig : Config(
             "Show Open Folder Button",
         description = "Show open folder button in the screenshot message",
         category = CATEGORY_GENERAL,
-        subcategory = SUBCATEGORY_BUTTONS
+        subcategory = SUBCATEGORY_SCREENSHOT_MESSAGE
     )
     var showOpenFolderButton = true
 
@@ -115,7 +110,7 @@ object ScreenshotMessageEnhancerConfig : Config(
             "Show Delete Button",
         description = "Show delete button in the screenshot message",
         category = CATEGORY_GENERAL,
-        subcategory = SUBCATEGORY_BUTTONS
+        subcategory = SUBCATEGORY_SCREENSHOT_MESSAGE
     )
     var showDeleteButton = true
 
@@ -128,7 +123,7 @@ object ScreenshotMessageEnhancerConfig : Config(
             "Show Upload Button",
         description = "Show upload button in the screenshot message",
         category = CATEGORY_GENERAL,
-        subcategory = SUBCATEGORY_BUTTONS
+        subcategory = SUBCATEGORY_SCREENSHOT_MESSAGE
     )
     var showUploadButton = true
 
@@ -155,8 +150,8 @@ object ScreenshotMessageEnhancerConfig : Config(
             //?} else {
             title =
             //?}
-            "Compress Screenshots",
-        description = "Compress Screenshots without any quality loss",
+            "Screenshot Compression",
+        description = "Compress screenshots without any quality loss",
         category = CATEGORY_GENERAL,
         subcategory = SUBCATEGORY_MISC
     )
