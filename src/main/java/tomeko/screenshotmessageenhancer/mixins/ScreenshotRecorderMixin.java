@@ -224,9 +224,9 @@ public abstract class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowCopyButton()) {
                         String command =
-                                //? if ornithe || 1.21.1 {
+                                //? if <= 1.21.1 {
                                 //"/" +
-                                //?}
+                                        //?}
                                 Constants.SCREENSHOT_COPY_COMMAND + " " + currentIdx;
 
                         //? if 1.8.9 {
@@ -275,12 +275,8 @@ public abstract class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowOpenButton()) {
                         //? if 1.8.9 {
-                        /*String command =
-                                //? if ornithe {
-                                //"/" +
-                                //?}
-                                Constants.SCREENSHOT_OPEN_COMMAND + " " + currentIdx;
-                        *///?} else {
+                        //String command = "/" + Constants.SCREENSHOT_OPEN_COMMAND + " " + currentIdx;
+                        //?} else {
                         String path = finalFile.getAbsolutePath();
                         //?}
 
@@ -332,12 +328,8 @@ public abstract class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowOpenFolderButton()) {
                         //? if 1.8.9 {
-                        /*String command =
-                                //? if ornithe {
-                                //"/" +
-                                        //?}
-                                Constants.SCREENSHOT_OPEN_FOLDER_COMMAND;
-                        *///?} else {
+                        //String command = "/" + Constants.SCREENSHOT_OPEN_FOLDER_COMMAND;
+                        //?} else {
                         String path = finalFolder.getAbsolutePath();
                         //?}
 
@@ -389,7 +381,7 @@ public abstract class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowDeleteButton()) {
                         String command =
-                                //? if ornithe || 1.21.1 {
+                                //? if <= 1.21.1 {
                                 //"/" +
                                         //?}
                                 Constants.SCREENSHOT_DELETE_COMMAND + " " + currentIdx;
@@ -440,7 +432,7 @@ public abstract class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowUploadButton()) {
                         String command =
-                                //? if ornithe || 1.21.1 {
+                                //? if <= 1.21.1 {
                                 //"/" +
                                         //?}
                                 Constants.SCREENSHOT_UPLOAD_COMMAND + " " + currentIdx;
