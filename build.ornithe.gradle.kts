@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 val modName = project.property("mod_name") as String
 val modId = project.property("mod_id") as String
 val modVersion = project.property("mod_version") as String
@@ -13,6 +15,7 @@ val fabricLoaderVersion = project.property("fabric_loader_version") as String
 val oslVersion = project.property("osl_version") as String
 
 val oneconfigVersion = project.property("oneconfig_version") as String
+val modMenuVersion = project.property("mod_menu_version") as String
 
 repositories {
     mavenCentral()
@@ -60,6 +63,8 @@ dependencies {
     implementation("org.polyfrost.oneconfig:ui:$oneconfigVersion")
     implementation("org.polyfrost.oneconfig:utils:$oneconfigVersion")
     implementation("org.polyfrost.oneconfig:hud:$oneconfigVersion")
+
+    modImplementation("com.terraformersmc:modmenu:$modMenuVersion+mc$minecraftVersion")
 }
 
 bloom {
@@ -83,6 +88,7 @@ tasks.processResources {
         "osl_version" to oslVersion,
 
         "oneconfig_version" to oneconfigVersion,
+        "mod_menu_version" to modMenuVersion,
     )
 
     inputs.properties(props)
@@ -92,8 +98,24 @@ tasks.processResources {
     }
 }
 
+tasks.withType<JavaCompile>().configureEach {
+    options.release = javaVersion.toInt()
+}
+
 java {
     withSourcesJar()
+    sourceCompatibility = JavaVersion.toVersion(javaVersion)
+    targetCompatibility = JavaVersion.toVersion(javaVersion)
+
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(javaVersion))
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(javaVersion)
+    }
 }
 
 tasks.jar {
