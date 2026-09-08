@@ -32,7 +32,7 @@ import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-//? if forge {
+//? if 1.8.9 {
 //import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 //?} else {
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -65,7 +65,7 @@ import java.util.function.Consumer;
         //?}
 )
 public abstract class ScreenshotRecorderMixin {
-    //? if forge {
+    //? if 1.8.9 {
     /*private static IntBuffer screenshotmessageenhancer$pixelBuffer;
     private static int[] screenshotmessageenhancer$pixelValues;
     *///?}
@@ -224,7 +224,7 @@ public abstract class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowCopyButton()) {
                         String command =
-                                //? if = 1.21.1 {
+                                //? if ornithe || 1.21.1 {
                                 //"/" +
                                 //?}
                                 Constants.SCREENSHOT_COPY_COMMAND + " " + currentIdx;
@@ -275,8 +275,12 @@ public abstract class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowOpenButton()) {
                         //? if 1.8.9 {
-                        //String command = Constants.SCREENSHOT_OPEN_COMMAND + " " + currentIdx;
-                        //?} else {
+                        /*String command =
+                                //? if ornithe {
+                                //"/" +
+                                //?}
+                                Constants.SCREENSHOT_OPEN_COMMAND + " " + currentIdx;
+                        *///?} else {
                         String path = finalFile.getAbsolutePath();
                         //?}
 
@@ -328,8 +332,12 @@ public abstract class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowOpenFolderButton()) {
                         //? if 1.8.9 {
-                        //String command = Constants.SCREENSHOT_OPEN_FOLDER_COMMAND;
-                        //?} else {
+                        /*String command =
+                                //? if ornithe {
+                                //"/" +
+                                        //?}
+                                Constants.SCREENSHOT_OPEN_FOLDER_COMMAND;
+                        *///?} else {
                         String path = finalFolder.getAbsolutePath();
                         //?}
 
@@ -381,9 +389,9 @@ public abstract class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowDeleteButton()) {
                         String command =
-                                //? if = 1.21.1 {
+                                //? if ornithe || 1.21.1 {
                                 //"/" +
-                                //?}
+                                        //?}
                                 Constants.SCREENSHOT_DELETE_COMMAND + " " + currentIdx;
 
                         //? if 1.8.9 {
@@ -432,9 +440,9 @@ public abstract class ScreenshotRecorderMixin {
 
                     if (ScreenshotMessageEnhancerConfig.INSTANCE.getShowUploadButton()) {
                         String command =
-                                //? if = 1.21.1 {
+                                //? if ornithe || 1.21.1 {
                                 //"/" +
-                                //?}
+                                        //?}
                                 Constants.SCREENSHOT_UPLOAD_COMMAND + " " + currentIdx;
 
                         //? if 1.8.9 {

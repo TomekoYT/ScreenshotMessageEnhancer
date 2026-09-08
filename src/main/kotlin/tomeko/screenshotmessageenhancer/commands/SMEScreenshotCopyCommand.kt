@@ -1,11 +1,16 @@
 package tomeko.screenshotmessageenhancer.commands
 
-//? if 1.8.9 {
+//? if forge {
 /*import net.minecraft.command.CommandBase
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommandSender
 import net.minecraft.command.WrongUsageException
 import net.minecraftforge.client.ClientCommandHandler
+*///?} elif ornithe {
+/*import com.mojang.brigadier.arguments.IntegerArgumentType
+import org.polyfrost.oneconfig.api.commands.v1.CommandManager.argument
+import org.polyfrost.oneconfig.api.commands.v1.CommandManager.literal
+import org.polyfrost.oneconfig.internal.legacy.command.ClientCommandRegistrationCallback
 *///?} else {
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
@@ -21,12 +26,12 @@ import tomeko.screenshotmessageenhancer.screenshots.ScreenshotManager
 import tomeko.screenshotmessageenhancer.utils.Constants
 
 object SMEScreenshotCopyCommand
-//? if 1.8.9 {
-    //: CommandBase()
+//? if forge {
+//: CommandBase()
 //?}
 {
     fun register() {
-        //? if 1.8.9 {
+        //? if forge {
         //ClientCommandHandler.instance.registerCommand(this)
         //?} else {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
@@ -45,7 +50,7 @@ object SMEScreenshotCopyCommand
         //?}
     }
 
-    //? if 1.8.9 {
+    //? if forge {
     /*const val COMMAND_USAGE = "/${Constants.SCREENSHOT_COPY_COMMAND} <pos>"
 
     override fun getCommandName(): String = Constants.SCREENSHOT_COPY_COMMAND

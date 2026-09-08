@@ -7,7 +7,9 @@ import cc.polyfrost.oneconfig.libs.eventbus.Subscribe
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
-*///?} else {
+*///?} elif ornithe {
+//import net.ornithemc.osl.entrypoints.api.ModInitializer
+//?} else {
 import net.fabricmc.api.ClientModInitializer
 //?}
 import tomeko.screenshotmessageenhancer.commands.*
@@ -23,7 +25,9 @@ import tomeko.screenshotmessageenhancer.utils.*
 )
 *///?}
 class ScreenshotMessageEnhancer
-//? if fabric || ornithe {
+//? if ornithe {
+    //: ModInitializer
+//?} elif fabric {
 : ClientModInitializer
 //?}
 {
@@ -32,7 +36,12 @@ class ScreenshotMessageEnhancer
     //?} else {
     override
     //?}
-    fun onInitializeClient(
+    fun
+            //? if fabric {
+            onInitializeClient(
+    //?} else {
+            //init(
+        //?}
         //? if forge {
         //event: FMLInitializationEvent
         //?}

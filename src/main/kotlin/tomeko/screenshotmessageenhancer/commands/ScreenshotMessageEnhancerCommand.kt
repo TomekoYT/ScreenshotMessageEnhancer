@@ -4,6 +4,14 @@ package tomeko.screenshotmessageenhancer.commands
 /*import cc.polyfrost.oneconfig.utils.commands.CommandManager
 import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main
+*///?} elif ornithe {
+/*import com.mojang.brigadier.arguments.IntegerArgumentType
+import org.polyfrost.oneconfig.api.commands.v1.CommandManager.argument
+import org.polyfrost.oneconfig.api.commands.v1.CommandManager.literal
+import org.polyfrost.oneconfig.api.event.v1.EventManager
+import org.polyfrost.oneconfig.api.event.v1.events.TickEvent
+import org.polyfrost.oneconfig.internal.legacy.command.ClientCommandRegistrationCallback
+import org.polyfrost.oneconfig.utils.v1.dsl.openUI
 *///?} else {
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
@@ -33,18 +41,25 @@ object ScreenshotMessageEnhancerCommand {
     fun register() {
         //? if forge {
         //CommandManager.INSTANCE.registerCommand(this)
-         //?} else {
-        ClientCommandRegistrationCallback.EVENT.register { dispatcher: CommandDispatcher<FabricClientCommandSource>, _: CommandBuildContext ->
+        //?} else {
+        ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             dispatcher.register(
                 literal(Constants.MOD_ID)
-                    .executes { _: CommandContext<FabricClientCommandSource> ->
+                    .executes {
                         shouldOpenConfig = true
-                        return@executes 1
+                        1
                     }
             )
         }
+        //?}
 
+
+        //? if !forge {
+        //? if ornithe {
+        //EventManager.register(TickEvent.Start::class) {
+            //?} elif fabric {
         ClientTickEvents.END_CLIENT_TICK.register { _: Minecraft ->
+            //?}
             if (!shouldOpenConfig) return@register
 
             ScreenshotMessageEnhancerConfig.openUI()

@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 val modName = project.property("mod_name") as String
 val modId = project.property("mod_id") as String
 val modVersion = project.property("mod_version") as String
@@ -12,9 +10,7 @@ val minecraftVersion = project.property("minecraft_version") as String
 
 val fabricLoaderVersion = project.property("fabric_loader_version") as String
 
-val featherVersion = project.property("feather_version") as String
 val oslVersion = project.property("osl_version") as String
-val lenisVersion = project.property("lenis_version") as String
 
 val oneconfigVersion = project.property("oneconfig_version") as String
 
@@ -52,11 +48,18 @@ dependencies {
     implementation(kotlin("stdlib"))
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings(ploceus.mcpMappings("stable", "1.8.9", "22"))
-    ploceus.dependOsl(oslVersion)
-    modImplementation("pl.tomgirl:lenis:${lenisVersion}")
     modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+    ploceus.dependOsl(oslVersion)
 
     modImplementation("org.polyfrost.oneconfig:$minecraftVersion-ornithe:$oneconfigVersion")
+    implementation("org.polyfrost.oneconfig:commands:$oneconfigVersion")
+    implementation("org.polyfrost.oneconfig:config:$oneconfigVersion")
+    implementation("org.polyfrost.oneconfig:config-impl:$oneconfigVersion")
+    implementation("org.polyfrost.oneconfig:events:$oneconfigVersion")
+    implementation("org.polyfrost.oneconfig:internal:$oneconfigVersion")
+    implementation("org.polyfrost.oneconfig:ui:$oneconfigVersion")
+    implementation("org.polyfrost.oneconfig:utils:$oneconfigVersion")
+    implementation("org.polyfrost.oneconfig:hud:$oneconfigVersion")
 }
 
 bloom {
@@ -77,6 +80,7 @@ tasks.processResources {
         "java_version" to javaVersion,
         "minecraft_version" to minecraftVersion,
         "fabric_loader_version" to fabricLoaderVersion,
+        "osl_version" to oslVersion,
 
         "oneconfig_version" to oneconfigVersion,
     )
@@ -88,24 +92,8 @@ tasks.processResources {
     }
 }
 
-tasks.withType<JavaCompile>().configureEach {
-    options.release = javaVersion.toInt()
-}
-
 java {
     withSourcesJar()
-    sourceCompatibility = JavaVersion.toVersion(javaVersion)
-    targetCompatibility = JavaVersion.toVersion(javaVersion)
-
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(javaVersion))
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = JvmTarget.fromTarget("1.8")
-    }
 }
 
 tasks.jar {
