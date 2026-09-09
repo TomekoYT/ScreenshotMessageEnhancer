@@ -6,15 +6,12 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Command
 import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 *///?} elif ornithe {
 /*import com.mojang.brigadier.arguments.IntegerArgumentType
+import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents
 import org.polyfrost.oneconfig.api.commands.v1.CommandManager.argument
 import org.polyfrost.oneconfig.api.commands.v1.CommandManager.literal
-import org.polyfrost.oneconfig.api.event.v1.EventManager
-import org.polyfrost.oneconfig.api.event.v1.events.TickEvent
 import org.polyfrost.oneconfig.internal.legacy.command.ClientCommandRegistrationCallback
 import org.polyfrost.oneconfig.utils.v1.dsl.openUI
 *///?} else {
-import com.mojang.brigadier.CommandDispatcher
-import com.mojang.brigadier.context.CommandContext
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 //? if >= 26.1 {
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal
@@ -56,8 +53,8 @@ object ScreenshotMessageEnhancerCommand {
 
         //? if !forge {
         //? if ornithe {
-        //EventManager.register(TickEvent.Start::class) {
-            //?} elif fabric {
+        //MinecraftClientEvents.TICK_END.register {
+        //?} else {
         ClientTickEvents.END_CLIENT_TICK.register { _: Minecraft ->
             //?}
             if (!shouldOpenConfig) return@register

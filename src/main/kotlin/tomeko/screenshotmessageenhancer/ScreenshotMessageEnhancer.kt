@@ -26,9 +26,9 @@ import tomeko.screenshotmessageenhancer.utils.*
 *///?}
 class ScreenshotMessageEnhancer
 //? if ornithe {
-    //: ModInitializer
+//: ModInitializer
 //?} elif fabric {
-: ClientModInitializer
+    : ClientModInitializer
 //?}
 {
     //? if forge {
@@ -37,10 +37,10 @@ class ScreenshotMessageEnhancer
     override
     //?}
     fun
-            //? if fabric {
+    //? if fabric {
             onInitializeClient(
-    //?} else {
-            //init(
+        //?} else {
+        //init(
         //?}
         //? if forge {
         //event: FMLInitializationEvent
@@ -64,6 +64,6 @@ class ScreenshotMessageEnhancer
 
         ScreenshotMessageEnhancerConfig.register()
 
-        Debug.forceLog("Initialized!")
+        Debug.forceLog("${Constants.MOD_VERSION} Initialized!")
     }
 }
