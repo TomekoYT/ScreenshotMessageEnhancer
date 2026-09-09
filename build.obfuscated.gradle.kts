@@ -11,7 +11,6 @@ val javaVersion = project.property("java_version") as String
 val minecraftVersion = project.property("minecraft_version") as String
 val fabricLoaderVersion = project.property("fabric_loader_version") as String
 val fabricApiVersion = project.property("fabric_api_version") as String
-val fabricLanguageKotlinVersion = project.property("fabric_language_kotlin_version") as String
 
 val oneconfigVersion = project.property("oneconfig_version") as String
 val modMenuVersion = project.property("mod_menu_version") as String
@@ -47,7 +46,6 @@ dependencies {
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
-    modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLanguageKotlinVersion")
 
     modImplementation("org.polyfrost.oneconfig:$minecraftVersion-fabric:$oneconfigVersion")
     modImplementation("com.terraformersmc:modmenu:$modMenuVersion")
@@ -72,7 +70,6 @@ tasks.processResources {
         "minecraft_version" to minecraftVersion,
         "fabric_loader_version" to fabricLoaderVersion,
         "fabric_api_version" to fabricApiVersion,
-        "fabric_language_kotlin_version" to fabricLanguageKotlinVersion,
 
         "oneconfig_version" to oneconfigVersion,
         "mod_menu_version" to modMenuVersion
