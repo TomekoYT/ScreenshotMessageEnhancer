@@ -58,9 +58,9 @@ fun sendChatMessage(
     //? if 1.8.9 {
     //mc.thePlayer.addChatMessage(message)
     //?} elif >= 26.2 {
-    //mc.gui.hud.chat.addClientSystemMessage(message)
+    mc.gui.hud.chat.addClientSystemMessage(message)
     //?} elif >= 26.1 {
-    mc.gui.chat.addClientSystemMessage(message)
+    //mc.gui.chat.addClientSystemMessage(message)
     //?} else {
     //mc.gui.chat.addMessage(message)
     //?}

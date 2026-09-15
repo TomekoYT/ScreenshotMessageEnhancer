@@ -19,8 +19,8 @@ repositories {
     mavenCentral()
     google()
 
+    maven("https://api.modrinth.com/maven")
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://repo.stellardrift.ca/repository/maven-snapshots/")
     maven("https://repo.polyfrost.org/releases")
     maven("https://repo.polyfrost.org/snapshots")
     maven("https://maven.terraformersmc.com/")
@@ -28,8 +28,8 @@ repositories {
 
 plugins {
     id("net.fabricmc.fabric-loom") version "1.17-SNAPSHOT"
-    id("org.jetbrains.kotlin.jvm") version "2.4.10"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.4.10"
+    id("org.jetbrains.kotlin.jvm") version "2.4.20"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.4.20"
     id("dev.deftu.gradle.bloom") version "0.2.0"
 }
 

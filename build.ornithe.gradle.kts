@@ -23,7 +23,6 @@ repositories {
 
     maven("https://maven.cloverclient.com/releases")
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://repo.stellardrift.ca/repository/maven-snapshots/")
     maven("https://repo.polyfrost.org/releases")
     maven("https://repo.polyfrost.org/snapshots")
 }
@@ -31,7 +30,7 @@ repositories {
 plugins {
     id("net.fabricmc.fabric-loom-remap") version "1.17-SNAPSHOT"
     id("ploceus") version "1.17-SNAPSHOT"
-    id("org.jetbrains.kotlin.jvm") version "2.4.10"
+    id("org.jetbrains.kotlin.jvm") version "2.4.20"
     id("dev.deftu.gradle.bloom") version "0.2.0"
 }
 
