@@ -11,24 +11,17 @@ import net.minecraft.event.HoverEvent;
 import net.minecraft.util.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 *///?} else {
 import com.mojang.blaze3d.pipeline.RenderTarget;
-//? if = 1.21.1 {
-//import com.mojang.blaze3d.platform.NativeImage;
-//?}
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Screenshot;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-//? if >= 1.21.11 {
 import net.minecraft.util.Util;
-//?} else {
-//import net.minecraft.Util;
 //?}
-//?}
+import org.lwjgl.opengl.GL12;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -92,45 +85,74 @@ public abstract class ScreenshotRecorderMixin {
             CallbackInfoReturnable<IChatComponent> cir
             *///?} else {
             RenderTarget target,
-            //? if >= 1.21.11 {
             int downscaleFactor,
-            //?}
             Consumer<Component> callback,
             CallbackInfo ci
             //?}
     ) {
-        //? if fabric {
+        //? if 1.8.9
+        //cir.setReturnValue(new ChatComponentText("Saving screenshot...").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)));
+        //? else
         ci.cancel();
-        //?}
+
         //? if 1.8.9 {
-        /*if (OpenGlHelper.isFramebufferEnabled()) {
-            width = buffer.framebufferTextureWidth;
-            height = buffer.framebufferTextureHeight;
+        /*int screenshotWidth = width;
+        int screenshotHeight = height;
+
+        if (OpenGlHelper.isFramebufferEnabled()) {
+            screenshotWidth = buffer.framebufferTextureWidth;
+            screenshotHeight = buffer.framebufferTextureHeight;
         }
 
-        int pixelCount = width * height;
+        int pixelCount = screenshotWidth * screenshotHeight;
 
         if (screenshotmessageenhancer$pixelBuffer == null || screenshotmessageenhancer$pixelBuffer.capacity() < pixelCount) {
             screenshotmessageenhancer$pixelBuffer = BufferUtils.createIntBuffer(pixelCount);
             screenshotmessageenhancer$pixelValues = new int[pixelCount];
         }
 
-        GL11.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1);
-        GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+        GL11.glPixelStorei(3333, 1);
+        GL11.glPixelStorei(3317, 1);
+
         screenshotmessageenhancer$pixelBuffer.clear();
 
         if (OpenGlHelper.isFramebufferEnabled()) {
             GlStateManager.bindTexture(buffer.framebufferTexture);
-            GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, screenshotmessageenhancer$pixelBuffer);
+            GL11.glGetTexImage(
+                    3553,
+                    0,
+                    32993,
+                    33639,
+                    screenshotmessageenhancer$pixelBuffer
+            );
         } else {
-            GL11.glReadPixels(0, 0, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, screenshotmessageenhancer$pixelBuffer);
+            GL11.glReadPixels(
+                    0,
+                    0,
+                    screenshotWidth,
+                    screenshotHeight,
+                    32993,
+                    33639,
+                    screenshotmessageenhancer$pixelBuffer
+            );
         }
 
         screenshotmessageenhancer$pixelBuffer.get(screenshotmessageenhancer$pixelValues);
-        TextureUtil.processPixelValues(screenshotmessageenhancer$pixelValues, width, height);
+        TextureUtil.processPixelValues(screenshotmessageenhancer$pixelValues, screenshotWidth, screenshotHeight);
+
+        for (int i = 0; i < pixelCount; i++) {
+            screenshotmessageenhancer$pixelValues[i] |= 0xFF000000;
+        }
 
         int[] pixelValuesAsync = new int[pixelCount];
-        System.arraycopy(screenshotmessageenhancer$pixelValues, 0, pixelValuesAsync, 0, pixelCount);
+
+        System.arraycopy(
+                screenshotmessageenhancer$pixelValues,
+                0,
+                pixelValuesAsync,
+                0,
+                pixelCount
+        );
 
         final int finalWidth = width;
         final int finalHeight = height;
@@ -165,9 +187,7 @@ public abstract class ScreenshotRecorderMixin {
         File finalFolder = accessibleScreenshotsFolder;
 
         //? if 1.8.9 {
-        /*cir.setReturnValue(new ChatComponentText("Saving screenshot...").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)));
-
-        ThreadExecutorKt.getThreadExecutor().execute(() -> {
+        /*ThreadExecutorKt.getThreadExecutor().execute(() -> {
             BufferedImage nativeImage;
 
             if (OpenGlHelper.isFramebufferEnabled()) {
