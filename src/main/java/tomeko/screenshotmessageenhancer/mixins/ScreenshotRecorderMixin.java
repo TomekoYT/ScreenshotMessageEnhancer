@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 *///?} else {
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -90,10 +91,15 @@ public abstract class ScreenshotRecorderMixin {
             CallbackInfo ci
             //?}
     ) {
-        //? if 1.8.9
+        //? if 1.8.9 {
         //cir.setReturnValue(new ChatComponentText("Saving screenshot...").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)));
+        //?} else {
+        //? if >= 26.2
+        Minecraft.getInstance().gui.hud.getChat().addClientSystemMessage(Component.literal("Saving screenshot...").withStyle((style -> style.withColor(ChatFormatting.GRAY))));
         //? else
+        //Minecraft.getInstance().gui.getChat().addClientSystemMessage(Component.literal("Saving screenshot...").withStyle((style -> style.withColor(ChatFormatting.GRAY))));
         ci.cancel();
+        //?}
 
         //? if 1.8.9 {
         /*int screenshotWidth = width;
@@ -203,10 +209,8 @@ public abstract class ScreenshotRecorderMixin {
                 nativeImage = new BufferedImage(finalWidth, finalHeight, BufferedImage.TYPE_INT_ARGB);
                 nativeImage.setRGB(0, 0, finalWidth, finalHeight, pixelValuesAsync, 0, finalWidth);
             }
-            *///?} elif >= 1.21.11 {
+            *///?} else{
         Screenshot.takeScreenshot(target, (nativeImage) -> {
-            //?} elif fabric {
-            //NativeImage nativeImage = Screenshot.takeScreenshot(target);
             //?}
 
             //? if fabric {
@@ -532,7 +536,7 @@ public abstract class ScreenshotRecorderMixin {
                 }
                 //?}
             });
-            //? if >= 1.21.11 {
+            //? if fabric {
         });
         //?}
     }
