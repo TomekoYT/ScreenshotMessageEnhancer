@@ -50,7 +50,8 @@ class ScreenshotMessageEnhancer
         //EventManager.INSTANCE.register(this)
         //?}
 
-        System.setProperty("java.awt.headless", "false")
+        if (!System.getProperty("os.name").lowercase().contains("mac"))
+            System.setProperty("java.awt.headless", "false")
 
         ScreenshotMessageEnhancerCommand.register()
         SMEScreenshotCopyCommand.register()

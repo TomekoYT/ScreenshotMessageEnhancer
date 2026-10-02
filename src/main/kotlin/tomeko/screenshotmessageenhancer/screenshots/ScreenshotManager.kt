@@ -28,6 +28,7 @@ import java.util.ArrayList
 import javax.imageio.ImageIO
 
 object ScreenshotManager {
+    val isMac = System.getProperty("os.name").lowercase().contains("mac")
     val screenshotFiles: ArrayList<File> = ArrayList()
 
     private val mc: Minecraft =
@@ -35,6 +36,7 @@ object ScreenshotManager {
     //Minecraft.getMinecraft()
         //?} else {
         Minecraft.getInstance()
+
     //?}
     fun copyScreenshot(pos: Int, showMessage: Boolean) {
         if (pos >= screenshotFiles.size) return
@@ -51,9 +53,19 @@ object ScreenshotManager {
                 val image: BufferedImage? = ImageIO.read(file)
 
                 if (image != null) {
-                    val content = ImageContent(image)
-
-                    Toolkit.getDefaultToolkit().systemClipboard.setContents(content, null)
+                    if (isMac)
+                        ProcessBuilder(
+                            "osascript",
+                            "-e",
+                            "on run argv",
+                            "-e",
+                            "set the clipboard to (read (POSIX file (item 1 of argv)) as «class PNGf»)",
+                            "-e",
+                            "end run",
+                            file.absolutePath,
+                        ).start()
+                    else
+                        Toolkit.getDefaultToolkit().systemClipboard.setContents(ImageContent(image), null)
 
                     //? if 1.8.9 {
                     //mc.addScheduledTask {
@@ -155,9 +167,8 @@ object ScreenshotManager {
         if (!file.exists()) return
 
         try {
-            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
-                Desktop.getDesktop().open(file)
-            }
+            if (isMac) ProcessBuilder("open", file.absolutePath).start()
+            else Desktop.getDesktop().open(file)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -171,9 +182,8 @@ object ScreenshotManager {
         }
 
         try {
-            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
-                Desktop.getDesktop().open(folder)
-            }
+            if (isMac) ProcessBuilder("open", folder.absolutePath).start()
+            else Desktop.getDesktop().open(folder)
         } catch (e: Exception) {
             e.printStackTrace()
         }
