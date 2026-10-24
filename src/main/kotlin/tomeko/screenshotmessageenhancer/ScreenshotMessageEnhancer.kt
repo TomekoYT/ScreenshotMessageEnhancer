@@ -50,12 +50,6 @@ class ScreenshotMessageEnhancer
         //EventManager.INSTANCE.register(this)
         //?}
 
-        // newer versions do this in MainMixin, before any other mod can touch AWT
-        //? if 1.8.9 {
-        /*if (!System.getProperty("os.name").lowercase().contains("mac"))
-            System.setProperty("java.awt.headless", "false")
-        *///?}
-
         ScreenshotMessageEnhancerCommand.register()
         SMEScreenshotCopyCommand.register()
         SMEScreenshotDeleteCommand.register()
